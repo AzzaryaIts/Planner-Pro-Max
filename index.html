@@ -111,7 +111,7 @@ body{font-family:var(--font-body);font-size:17px;line-height:1.45;
   padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 [hidden]{display:none!important}
 button{font:inherit;color:inherit;cursor:pointer}
-.app{max-width:800px;margin:0 auto;padding-block:24px 96px;display:flex;flex-direction:column;gap:16px}
+.app{max-width:clamp(800px,calc(100vw - 440px),1120px);margin:0 auto;padding-block:24px 96px;display:flex;flex-direction:column;gap:16px}
 
 header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .brand{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
@@ -351,10 +351,14 @@ dialog.sheet{max-height:min(88vh,760px);overflow:auto}
 .vtag.wait span{overflow:hidden;text-overflow:ellipsis}
 .vtag.agg{background:transparent;box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--c,var(--muted)) 50%,transparent);border:0;font-weight:600;color:var(--muted)}
 .vtag.wait.agg{color:var(--warn)}
-@media (min-width:1220px){
+@media (min-width:1240px){
   body[data-mode="tree"] .vtags, body[data-mode="list"] .vtags, body[data-mode="urgent"] .vtags, body[data-mode="agenda"] .vtags{position:absolute;left:calc(100% + 14px);flex-direction:column;align-items:flex-start;gap:3px}
 }
 .stpanel .chip svg{flex:none}
+.ksub{font-family:var(--font-display);font-weight:var(--display-weight,400);font-size:1.1rem;margin:18px 0 4px}
+.chip.outside .dot{box-shadow:inset 0 0 0 2px var(--surface)}
+.kadd{flex:1;min-width:180px;font:inherit;font-size:.9rem;color:var(--ink);background:var(--surface);border:1px dashed var(--line);border-radius:999px;padding:3px 12px;outline:none}
+.kadd:focus{border-style:solid;border-color:var(--accent)}
 .win{flex:1;min-width:200px;font:inherit;font-size:.92rem;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 10px;outline:none}
 .win:focus{border-color:var(--accent)}
 .agenda-head{display:flex;align-items:center;gap:8px}
@@ -433,6 +437,9 @@ dialog.sheet{max-height:min(88vh,760px);overflow:auto}
 #help .g-anat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 14px 14px;overflow-x:auto}
 #help .g-row{display:flex;align-items:center;gap:6px;background:var(--soft);border-radius:9px;padding:6px 6px;min-width:620px}
 #help .g-row .g-t{flex:1;font-weight:600}
+#help .g-vt{display:inline-flex;align-items:center;gap:5px;font-size:.75rem;font-weight:700;border-radius:999px;padding:1px 9px;background:var(--soft);color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--p2);white-space:nowrap}
+#help .g-vt::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--p2)}
+#help .g-mnote{font-size:.85rem;color:var(--muted);padding:2px 0 0;padding-inline-start:96px}
 #help .g-ic{width:28px;height:28px;display:grid;place-items:center;color:var(--muted);position:relative;flex:none}
 #help .g-ic svg{display:block}
 #help .g-ic.g-on{color:var(--accent)}
@@ -448,7 +455,7 @@ dialog.sheet{max-height:min(88vh,760px);overflow:auto}
 #help .g-legend{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 20px;margin-top:16px;font-size:.93rem;padding:0;list-style:none}
 #help .g-legend li{display:flex;gap:8px;align-items:baseline;min-width:0}
 #help .g-legend b.g-num{flex:none;font-size:.7rem;font-weight:800;color:var(--surface);background:var(--ink);border-radius:999px;min-width:17px;height:17px;display:inline-grid;place-items:center;padding:0 4px;font-variant-numeric:tabular-nums;transform:translateY(-1px)}
-#help .g-views{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+#help .g-views{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
 #help .g-view{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:6px;min-width:0}
 #help .g-view .g-vn{font-weight:800;color:var(--accent)}
 #help .g-view p{font-size:.88rem;color:var(--muted)}
@@ -572,15 +579,18 @@ dialog.sheet{max-height:min(88vh,760px);overflow:auto}
         <span class="g-ic g-tag"><b class="g-n">2</b><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         <span class="g-tag"><b class="g-n">3</b><span class="g-chk"></span></span>
         <span class="g-t">הגשת עבודה בסטטיסטיקה</span>
+        <span class="g-vt">מול המרצה</span>
         <span class="g-tag"><b class="g-n">4</b><span class="g-dot"></span><span class="g-dot g-ring"></span></span>
         <span class="g-tag"><b class="g-n">5</b><span class="g-pill g-soon">מחר ↻</span></span>
         <span class="g-tag"><b class="g-n">6</b><span class="g-pill g-count">1/3</span></span>
         <span class="g-ic g-flag g-tag"><b class="g-n">7</b><svg width="17" height="17" viewBox="0 0 18 18" fill="none"><path d="M4.5 15.5V3M4.5 3.5h8.5l-2 3 2 3H4.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" fill="currentColor" fill-opacity=".25"/></svg></span>
         <span class="g-ic g-on g-tag"><b class="g-n">8</b><svg width="17" height="17" viewBox="0 0 18 18" fill="none"><path d="M4 2.5h7l3 3v10H4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M6.5 8.5h5M6.5 11.5h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
         <span class="g-ic g-tag"><b class="g-n">9</b><svg width="17" height="17" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="6" r="3" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 15.5c.8-3 3-4.5 5.5-4.5s4.7 1.5 5.5 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
-        <span class="g-ic g-tag"><b class="g-n">10</b><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 3.5v11M3.5 9h11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
-        <span class="g-ic g-tag"><b class="g-n">11</b><svg width="17" height="17" viewBox="0 0 18 18" fill="none"><path d="M3.5 5h11M7 5V3.5h4V5M5 5l.8 9.5h6.4L13 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="g-ic g-on g-tag"><b class="g-n">10</b><svg width="17" height="17" viewBox="0 0 18 18" fill="none"><path d="M3 6h10.5M11 3.5L13.5 6 11 8.5M15 12H4.5M7 9.5L4.5 12 7 14.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="g-ic g-tag"><b class="g-n">11</b><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 3.5v11M3.5 9h11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+        <span class="g-ic g-tag"><b class="g-n">12</b><svg width="17" height="17" viewBox="0 0 18 18" fill="none"><path d="M3.5 5h11M7 5V3.5h4V5M5 5l.8 9.5h6.4L13 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </div>
+      <div class="g-mnote">צריך 10 עמודים, הגשה במודל</div>
       <ol class="g-legend">
         <li><b class="g-num">1</b><span><b>גרירה</b> לשינוי סדר, או לתוך משימה אחרת.</span></li>
         <li><b class="g-num">2</b><span><b>כיווץ ופתיחה</b> של תתי-המשימות.</span></li>
@@ -591,27 +601,31 @@ dialog.sheet{max-height:min(88vh,760px);overflow:auto}
         <li><b class="g-num">7</b><span><b>חשיבות:</b> לחיצה עוברת בין רגילה, חשובה וחשובה מאוד.</span></li>
         <li><b class="g-num">8</b><span><b>תיאור ותגובות.</b> המספר על הכפתור סופר תגובות.</span></li>
         <li><b class="g-num">9</b><span><b>שיוך:</b> בעלים אחד, ועוד כמה אנשים ב"גם אצל".</span></li>
-        <li><b class="g-num">10</b><span><b>תת-משימה חדשה.</b></span></li>
-        <li><b class="g-num">11</b><span><b>מחיקה</b> לפח, עם כפתור ביטול לכמה שניות.</span></li>
+        <li><b class="g-num">10</b><span><b>כדי לקדם:</b> בעצמי, מול אדם, או ממתין למשהו.</span></li>
+        <li><b class="g-num">11</b><span><b>תת-משימה חדשה.</b></span></li>
+        <li><b class="g-num">12</b><span><b>מחיקה</b> לפח, עם כפתור ביטול לכמה שניות.</span></li>
       </ol>
     </div>
   </section>
 
   <section>
     <div class="g-sec-head">
-      <h2>חמש תצוגות, אותן משימות</h2>
+      <h2>שבע תצוגות, אותן משימות</h2>
       <p>המתג נמצא מתחת לכותרת. כל תצוגה מתאימה לעצמה את בחירת האדם ואת הסינונים.</p>
     </div>
     <div class="g-views">
       <div class="g-view"><span class="g-vn">עץ</span><p>כל ההיררכיה. כאן בונים ועורכים.</p></div>
+      <div class="g-view"><span class="g-vn">טבלה</span><p>העץ כטבלה עם עמודות: כדי לקדם, של מי, דדליין וחשיבות. נפתחת ונסגרת כמו העץ.</p></div>
       <div class="g-view"><span class="g-vn">רשימה</span><p>כל המשימות ברצף, והמסלול של כל אחת באפור לידה.</p></div>
       <div class="g-view"><span class="g-vn">דחיפות</span><p>רק משימות עם דדליין: באיחור, היום, מחר, השבוע, בהמשך.</p></div>
+      <div class="g-view"><span class="g-vn">קידום</span><p>מה מחכה למי: קבוצה לכל אדם, וקבוצה של ממתינות. טוב לפני שיחה.</p></div>
       <div class="g-view"><span class="g-vn">ארכיון</span><p>משימות שבוצעו לפני יותר משבוע עוברות לכאן לבד.</p></div>
       <div class="g-view"><span class="g-vn">פח</span><p>כל מה שנמחק, עם שחזור למקום המקורי.</p></div>
     </div>
     <div class="g-chips">
       <span><span class="g-chip">הכל</span> / <span class="g-chip"><span class="g-dot"></span>שם של אדם</span> מציג את כולם או אדם אחד</span>
       <span><span class="g-chip">1 · 2 · 3 · הכל</span> פותח את העץ עד רמה מסוימת</span>
+      <span><span class="g-chip">בעצמי · מול אנשים · ממתין</span> מה אפשר לקדם עכשיו, ומה תלוי באחרים</span>
       <span><span class="g-chip">רק חשובות</span> מסנן לפי דגל</span>
     </div>
   </section>
@@ -625,6 +639,8 @@ dialog.sheet{max-height:min(88vh,760px);overflow:auto}
       <div class="g-tip"><b>"גם אצל"</b><span>משימה ששויכה לכם מופיעה בתצוגה שלכם, באזור "שויכו גם ל...", יחד עם כל תתי-המשימות שלה.</span></div>
       <div class="g-tip"><b>מאז הביקור הקודם</b><span>בכניסה מופיע סיכום של מה אחרים הוסיפו, סימנו או הגיבו, והמשימות האלו צבועות. "ראיתי" מנקה.</span></div>
       <div class="g-tip"><b>משימות חוזרות</b><span>בחלונית הדדליין בוחרים כל יום, שבוע או חודש. סימון "בוצעה" מקפיץ את המשימה לתאריך הבא ופותח מחדש את תתי-המשימות.</span></div>
+      <div class="g-tip"><b>כדי לקדם</b><span>"מול נועה" מוסיף תגית בצבע שלה בצד המשימה. אפשר גם מישהו מחוץ לצוות, פשוט כותבים את השם. משימת אב סגורה מראה "בפנים: מול…".</span></div>
+      <div class="g-tip"><b>הערות</b><span>כפתור ההערה פותח תיבת טקסט. Enter מסיים, Shift+Enter יורד שורה, וההערה נשארת באפור מתחת למשימה.</span></div>
       <div class="g-tip"><b>שורה ריקה נעלמת</b><span>משימה חדשה שיצאתם ממנה בלי לכתוב כלום נמחקת לבד.</span></div>
       <div class="g-tip"><b>עיצוב אישי</b><span>"עיצוב" בכותרת: 10 פלטות, 6 גופנים, בהיר או כהה. נשמר רק במכשיר שלכם.</span></div>
       <div class="g-tip g-warn"><b>תמיד הקישור המלא</b><span>הקוד שבסוף הכתובת (<span dir="ltr">#g=…</span>) הוא הקבוצה. כתובת בלעדיו פותחת רשימה חדשה וריקה.</span></div>
@@ -676,6 +692,10 @@ dialog.sheet{max-height:min(88vh,760px);overflow:auto}
   <ul class="plist" id="plist"></ul>
   <div class="addp" id="addp"><input id="addp-input" placeholder="שם של אדם חדש" autocomplete="off" enterkeyhint="done"><button class="btn primary" type="button" id="addp-btn">הוספה</button></div>
   <p class="hint">"זה אני" נשמר רק במכשיר הזה. משימות שתוסיף בתצוגה "הכל" יירשמו עליך.</p>
+  <h3 class="ksub">מחוץ לצוות</h3>
+  <p class="hint" style="margin-top:0">אנשים שמקדמים מולם משימות, בלי שיהיו חלק מהקבוצה. הם לא מופיעים בבחירת התצוגות ואי אפשר לשייך להם משימות, רק לסמן "מול".</p>
+  <ul class="plist" id="klist"></ul>
+  <div class="addp"><input id="addk-input" placeholder="שם של מישהו מחוץ לצוות" autocomplete="off" enterkeyhint="done"><button class="btn" type="button" id="addk-btn">הוספה</button></div>
   <div class="dfoot"><button class="btn" type="button" id="people-close">סגירה</button></div>
 </dialog>
 
@@ -714,11 +734,11 @@ const GL = { get:(k,d)=>LS.get(G+'.'+k,d), set:(k,v)=>LS.set(G+'.'+k,v) };
 /* ---------- backends ---------- */
 function localBackend(){
   const KEY = 'nihulan.local.' + G;
-  const load = () => { let o; try{ o = JSON.parse(localStorage.getItem(KEY)); }catch(e){} o = o || {}; for (const k of ['tasks','users','comments']) o[k] = o[k] || {}; return o; };
-  let st = load(); const subs = {tasks:[],users:[],comments:[]};
+  const load = () => { let o; try{ o = JSON.parse(localStorage.getItem(KEY)); }catch(e){} o = o || {}; for (const k of ['tasks','users','comments','contacts']) o[k] = o[k] || {}; return o; };
+  let st = load(); const subs = {tasks:[],users:[],comments:[],contacts:[]};
   let ch = null; try { ch = new BroadcastChannel(KEY); } catch(e){}
   const copy = m => Object.fromEntries(Object.entries(m).map(([k,v]) => [k, {...v}]));
-  const emit = () => { for (const k of ['tasks','users','comments']) subs[k].forEach(cb => cb(copy(st[k]), {fromCache:false})); };
+  const emit = () => { for (const k of ['tasks','users','comments','contacts']) subs[k].forEach(cb => cb(copy(st[k]), {fromCache:false})); };
   const commit = () => { try{ localStorage.setItem(KEY, JSON.stringify(st)); }catch(e){} emit(); ch && ch.postMessage(1); return Promise.resolve(); };
   if (ch) ch.onmessage = () => { st = load(); emit(); };
   return {
@@ -770,7 +790,7 @@ function applyLocalEdits(m){
 }
 
 /* ---------- state ---------- */
-let T = {}, TD = {}, U = {}, C = {}, loaded = {tasks:false, users:false};
+let T = {}, TD = {}, U = {}, C = {}, K = {}, loaded = {tasks:false, users:false};
 let me = GL.get('me', ''), view = GL.get('view', 'all');
 const collapsed = new Set(GL.get('collapsed', [])), openDesc = new Set(GL.get('openDesc', []));
 let hideDone = GL.get('hideDone', false), mode = GL.get('mode', 'tree');
@@ -807,6 +827,11 @@ function descendants(id){ const out=[]; (function w(p){ for (const c of kids(p))
 function ancestors(id){ const out=[]; let t=T[id], guard=0; while (t && t.parent && T[t.parent] && guard++<50) { out.unshift(t.parent); t=T[t.parent]; } return out; }
 const userColor = id => (U[id] && U[id].color) || 'var(--muted)';
 const userName = id => (U[id] && U[id].name) || 'ללא שיוך';
+// the person a task is waiting on: a team member or someone outside the team
+const viaOf = id => U[id] || K[id] || null;
+const viaColor = id => (viaOf(id) && viaOf(id).color) || 'var(--muted)';
+const viaName = id => (viaOf(id) && viaOf(id).name) || 'מישהו';
+const contactsSorted = () => Object.entries(K).map(([id,c]) => ({...c, id})).sort((a,b) => (a.name||'').localeCompare(b.name||'', 'he'));
 const usersSorted = () => Object.entries(U).map(([id,u]) => ({...u, id})).sort((a,b) => (a.order||0)-(b.order||0));
 
 /* ---------- rendering ---------- */
@@ -922,13 +947,13 @@ function renderUrgent(X){
 
 
 /* ---------- how a task moves forward: by me, with a person, or waiting ---------- */
-const kindOf = t => t && t.status === 'person' && U[t.via] ? 'person' : t && t.status === 'wait' ? 'wait' : 'self';
+const kindOf = t => t && t.status === 'person' && viaOf(t.via) ? 'person' : t && t.status === 'wait' ? 'wait' : 'self';
 const kindOk = t => kindF === 'all' || kindOf(t) === kindF;
 const I_WAIT = '<svg width="12" height="12" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M5 2.5h8M5 15.5h8M6 2.5c0 4 6 4.5 6 6.5s-6 2.5-6 6.5M12 2.5c0 4-6 4.5-6 6.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
 function ownTag(t){
   if (t.done) return '';
   const k = kindOf(t);
-  if (k === 'person') return `<button class="vtag" style="--c:${userColor(t.via)}" data-act="status" title="מחכה לקידום מול ${esc(userName(t.via))}" type="button"><i class="vdot"></i>מול ${esc(userName(t.via))}</button>`;
+  if (k === 'person') return `<button class="vtag" style="--c:${viaColor(t.via)}" data-act="status" title="מחכה לקידום מול ${esc(viaName(t.via))}" type="button"><i class="vdot"></i>מול ${esc(viaName(t.via))}</button>`;
   if (k === 'wait') return `<button class="vtag wait" data-act="status" title="ממתינה${t.waitFor ? ': ' + esc(t.waitFor) : ''}" type="button">${I_WAIT}<span>${t.waitFor ? 'ממתין: ' + esc(t.waitFor) : 'ממתין'}</span></button>`;
   return '';
 }
@@ -940,7 +965,7 @@ function aggTags(id){
     if (k === 'person') people.set(t.via, (people.get(t.via) || 0) + 1); else if (k === 'wait') waiting++;
   }
   let h = '';
-  for (const [u, n] of people) h += `<span class="vtag agg" style="--c:${userColor(u)}" title="בתוכה ${n === 1 ? 'משימה אחת' : n + ' משימות'} לקידום מול ${esc(userName(u))}"><i class="vdot"></i>בפנים: מול ${esc(userName(u))}${n > 1 ? ' ×' + n : ''}</span>`;
+  for (const [u, n] of people) h += `<span class="vtag agg" style="--c:${viaColor(u)}" title="בתוכה ${n === 1 ? 'משימה אחת' : n + ' משימות'} לקידום מול ${esc(viaName(u))}"><i class="vdot"></i>בפנים: מול ${esc(viaName(u))}${n > 1 ? ' ×' + n : ''}</span>`;
   if (waiting) h += `<span class="vtag wait agg">${I_WAIT}<span>בפנים: ${waiting === 1 ? 'ממתינה אחת' : waiting + ' ממתינות'}</span></span>`;
   return h;
 }
@@ -952,8 +977,11 @@ function tagsHTML(t, opts){
 }
 function stHTML(t){
   const k = kindOf(t), us = usersSorted();
-  const people = us.map(u => `<button class="chip" style="--c:${u.color}" aria-pressed="${k==='person' && t.via===u.id}" data-act="set-status" data-s="person" data-u="${u.id}" type="button"><span class="dot"></span>מול ${esc(u.name)}</button>`).join('');
-  return `<div class="assign stpanel"><div class="line">כדי לקדם: <button class="chip" aria-pressed="${k==='self'}" data-act="set-status" data-s="self" type="button">בעצמי</button>${people || '<button class="chip" data-act="open-people" type="button">+ הוספת אנשים</button>'}<button class="chip" aria-pressed="${k==='wait'}" data-act="set-status" data-s="wait" type="button">${I_WAIT} ממתין</button></div>
+  const chip = (u, outside) => `<button class="chip ${outside ? 'outside' : ''}" style="--c:${u.color}" aria-pressed="${k==='person' && t.via===u.id}" data-act="set-status" data-s="person" data-u="${u.id}" type="button"><span class="dot"></span>מול ${esc(u.name)}</button>`;
+  const people = us.map(u => chip(u, false)).join('');
+  const outside = contactsSorted().map(c => chip(c, true)).join('');
+  return `<div class="assign stpanel"><div class="line">כדי לקדם: <button class="chip" aria-pressed="${k==='self'}" data-act="set-status" data-s="self" type="button">בעצמי</button>${people}<button class="chip" aria-pressed="${k==='wait'}" data-act="set-status" data-s="wait" type="button">${I_WAIT} ממתין</button></div>
+    <div class="line">מחוץ לצוות: ${outside}<input class="kadd" data-kfor="${t.id}" id="kadd-${t.id}" placeholder="+ שם של מישהו אחר, ואז Enter" autocomplete="off" enterkeyhint="done" aria-label="אדם מחוץ לצוות"></div>
     ${k === 'wait' ? `<div class="line"><input class="win" data-wfor="${t.id}" id="win-${t.id}" value="${esc(drafts['w:'+t.id] ?? t.waitFor ?? '')}" placeholder="למה היא ממתינה? למשל: תשובה מהמרצה (לא חובה)" autocomplete="off" enterkeyhint="done" aria-label="למה היא ממתינה"></div>` : ''}</div>`;
 }
 function descNote(t){
@@ -1016,7 +1044,7 @@ function renderAgenda(X){
   const byVia = new Map();
   open.filter(t => kindOf(t) === 'person').forEach(t => { if (!byVia.has(t.via)) byVia.set(t.via, []); byVia.get(t.via).push(t); });
   const waiting = open.filter(t => kindOf(t) === 'wait');
-  const us = usersSorted().filter(u => byVia.has(u.id));
+  const us = [...usersSorted(), ...contactsSorted().map(c => ({...c, outside:true}))].filter(u => byVia.has(u.id));
   if (agendaFor !== 'all' && agendaFor !== 'wait' && !byVia.has(agendaFor)) agendaFor = 'all';
   const sortT = list => list.sort((a,b) => ((b.prio||0)-(a.prio||0)) || ((a.due||'9') < (b.due||'9') ? -1 : (a.due||'9') > (b.due||'9') ? 1 : 0) || (a.order||0)-(b.order||0));
   let h = `<li class="arch-head"><button class="chip" data-agenda="all" aria-pressed="${agendaFor==='all'}" type="button">כולם</button>${us.map(u => `<button class="chip" style="--c:${u.color}" data-agenda="${u.id}" aria-pressed="${agendaFor===u.id}" type="button"><span class="dot"></span>${esc(u.name)} <span class="ucount">${byVia.get(u.id).length}</span></button>`).join('')}${waiting.length ? `<button class="chip" data-agenda="wait" aria-pressed="${agendaFor==='wait'}" type="button">${I_WAIT} ממתינות <span class="ucount">${waiting.length}</span></button>` : ''}</li>`;
@@ -1025,7 +1053,7 @@ function renderAgenda(X){
   for (const u of us) {
     if (agendaFor !== 'all' && agendaFor !== u.id) continue;
     any = true;
-    h += `<li class="ugroup"><h2 class="section-title agenda-head" style="--c:${u.color}"><span class="dot"></span>מול ${esc(u.name)} <span class="ucount">${byVia.get(u.id).length}</span></h2><ul class="assigned">${sortT(byVia.get(u.id)).map(t => row(t, true)).join('')}</ul></li>`;
+    h += `<li class="ugroup"><h2 class="section-title agenda-head" style="--c:${u.color}"><span class="dot"></span>מול ${esc(u.name)} <span class="ucount">${byVia.get(u.id).length}${u.outside ? ' · מחוץ לצוות' : ''}</span></h2><ul class="assigned">${sortT(byVia.get(u.id)).map(t => row(t, true)).join('')}</ul></li>`;
   }
   if (waiting.length && (agendaFor === 'all' || agendaFor === 'wait')) {
     any = true;
@@ -1105,6 +1133,7 @@ function captureFocus(){
   if (a.classList && a.classList.contains('text')) return {kind:'text', id:a.dataset.id, caret:getCaret(a), value:a.textContent};
   if (a.dataset && a.dataset.desc) return {kind:'desc', id:a.dataset.desc, s:a.selectionStart, e:a.selectionEnd, value:a.value};
   if (a.classList && a.classList.contains('cin')) return {kind:'cin', id:a.dataset.cfor, value:a.value};
+  if (a.classList && a.classList.contains('kadd')) return {kind:'kadd', id:a.dataset.kfor, value:a.value};
   if (a.classList && a.classList.contains('win')) return {kind:'win', id:a.dataset.wfor, value:a.value, s:a.selectionStart};
   return null;
 }
@@ -1117,6 +1146,8 @@ function restoreFocus(f){
   if (f.kind === 'text') {
     const el = document.querySelector(`.text[data-id="${f.id}"]`);
     if (el) { if (el.textContent !== f.value) el.textContent = f.value; setCaret(el, f.caret); }
+  } else if (f.kind === 'kadd') {
+    const el = document.getElementById('kadd-' + f.id); if (el) { el.value = f.value; el.focus(); }
   } else if (f.kind === 'win') {
     const el = document.getElementById('win-' + f.id);
     if (el) { el.value = f.value; el.focus(); try { el.setSelectionRange(f.s, f.s); } catch(e){} }
@@ -1723,12 +1754,60 @@ document.addEventListener('keydown', e => {
 $('#kinds').addEventListener('click', e => { const b = e.target.closest('[data-kind]'); if (!b) return; sticky.clear(); kindF = b.dataset.kind; GL.set('kindF', kindF); render(); });
 $('#urgent').addEventListener('click', e => { const b = e.target.closest('[data-agenda]'); if (!b) return; agendaFor = b.dataset.agenda; GL.set('agendaFor', agendaFor); render(); });
 
+
+/* ---------- people outside the team ---------- */
+function newContact(name){
+  const used = new Set([...Object.values(U), ...Object.values(K)].map(u => u.color));
+  const color = PALETTE.slice().reverse().find(c => !used.has(c)) || PALETTE[(Object.keys(K).length + 3) % PALETTE.length];
+  const id = B.newId(); const d = {name, color, created:Date.now()};
+  K[id] = d; write(B.set('contacts', id, d));
+  return id;
+}
+document.addEventListener('keydown', e => {
+  const el = e.target; if (!el.classList || !el.classList.contains('kadd') || e.key !== 'Enter' || e.isComposing) return;
+  e.preventDefault();
+  const v = el.value.trim(), tid = el.dataset.kfor; if (!v || !T[tid]) return;
+  const existing = contactsSorted().find(c => c.name === v) || usersSorted().find(u => u.name === v);
+  const cid = existing ? existing.id : newContact(v);
+  patch(tid, {status:'person', via:cid}, 'edit'); stFor = null; render();
+});
+
 /* ---------- people dialog ---------- */
 function openPeople(){ renderPeople(); const d = $('#people'); if (!d.open) d.showModal(); }
 $('#btn-people').addEventListener('click', openPeople);
 $('#people-close').addEventListener('click', () => $('#people').close());
 $('#people').addEventListener('close', () => { paletteFor = null; render(); });
+function renderContacts(){
+  const cs = contactsSorted();
+  $('#klist').innerHTML = cs.length ? cs.map(c => `<li data-k="${c.id}">
+    <div class="prow">
+      <button class="swatch" style="--c:${c.color}" data-kact="palette" aria-label="בחירת צבע" type="button"></button>
+      <input value="${esc(c.name)}" data-kact="name" id="kname-${c.id}" aria-label="שם">
+      <button class="icon del" style="opacity:1" data-kact="del" aria-label="הסרה" title="הסרה" type="button">${ICON.trash}</button>
+      ${paletteFor===c.id ? `<div class="palette">${PALETTE.map(x => `<button class="swatch" style="--c:${x}" aria-pressed="${x===c.color}" data-kact="color" data-c="${x}" aria-label="צבע" type="button"></button>`).join('')}</div>` : ''}
+    </div></li>`).join('') : '';
+}
+$('#klist').addEventListener('click', e => {
+  const b = e.target.closest('[data-kact]'); if (!b) return;
+  const id = b.closest('li[data-k]').dataset.k, act = b.dataset.kact;
+  if (act === 'palette') { paletteFor = paletteFor === id ? null : id; renderContacts(); }
+  else if (act === 'color') { K[id] = {...K[id], color:b.dataset.c}; write(B.update('contacts', id, {color:b.dataset.c})); paletteFor = null; renderContacts(); render(); }
+  else if (act === 'del') {
+    const backup = {...K[id]}; delete K[id]; write(B.del('contacts', id)); renderContacts(); render();
+    toast(`${backup.name} הוסר. משימות שסומנו מולו חזרו ל"בעצמי".`, 'ביטול', () => { K[id] = backup; write(B.set('contacts', id, backup)); renderContacts(); render(); });
+  }
+});
+$('#klist').addEventListener('change', e => {
+  const el = e.target; if (el.dataset.kact !== 'name') return;
+  const id = el.closest('li[data-k]').dataset.k, v = el.value.trim();
+  if (v && K[id] && v !== K[id].name) { K[id] = {...K[id], name:v}; write(B.update('contacts', id, {name:v})); render(); }
+});
+function addContactFromDialog(){ const inp = $('#addk-input'), v = inp.value.trim(); if (!v) return; newContact(v); inp.value = ''; renderContacts(); render(); inp.focus(); }
+$('#addk-input').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.isComposing) { e.preventDefault(); addContactFromDialog(); } });
+$('#addk-btn').addEventListener('click', addContactFromDialog);
+
 function renderPeople(){
+  renderContacts();
   const us = usersSorted();
   $('#plist').innerHTML = us.length ? us.map(u => `<li data-u="${u.id}">
     <div class="prow">
@@ -1795,6 +1874,7 @@ B.on('tasks', (m, meta) => {
   render();
 }, err => { console.error(err); st.className = 'status'; st.textContent = 'אין גישה לנתונים'; toast('אין גישה למסד הנתונים. בדקו את כללי האבטחה ב-Firebase.'); });
 B.on('comments', m => { C = m; render(); });
+B.on('contacts', m => { K = m; render(); if ($('#people').open) renderPeople(); });
 B.on('users', m => { U = m; loaded.users = true; render(); if ($('#people').open) renderPeople(); });
 window.addEventListener('online', () => render());
 window.addEventListener('offline', () => { if (B.mode === 'cloud') { st.className = 'status'; st.textContent = 'לא מחובר, נשמר ויסונכרן'; } });
