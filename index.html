@@ -142,7 +142,10 @@ h1{font-family:var(--font-display);font-weight:var(--display-weight,400);font-si
 ul{list-style:none;margin:0;padding:0}
 #tree{display:flex;flex-direction:column;gap:12px;min-height:8px}
 .cat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:4px 6px}
-.kids{padding-inline-start:20px;margin-inline-start:22px;border-inline-start:1.5px solid var(--line);min-height:4px}
+.kids{padding-inline-start:20px;margin-inline-start:22px;min-height:4px}
+.tlines{position:absolute;inset:0;pointer-events:none;z-index:0}
+.tlines i{position:absolute;background:var(--line);display:block}
+#tree .check,#tree .caret,#tree .assign,#tree .desc,#tree .dnote{position:relative;z-index:1}
 .row{display:flex;align-items:center;gap:4px;padding:3px 2px;border-radius:8px;min-height:38px}
 .row:hover,.row:focus-within{background:var(--accent-soft)}
 .grip{width:18px;height:28px;flex:none;display:grid;place-items:center;color:var(--muted);cursor:grab;opacity:0;touch-action:none}
@@ -249,6 +252,7 @@ mark{background:var(--warn-soft);color:inherit;border-radius:3px;padding:0 1px}
 .empty{text-align:center;color:var(--muted);padding:40px 16px;border:1.5px dashed var(--line);border-radius:14px}
 .empty strong{display:block;font-family:var(--font-display);font-weight:var(--display-weight,400);color:var(--ink);font-size:1.25rem;margin-bottom:4px}
 .ghost{opacity:.35}
+.sortable-chosen ~ .tlines,.tlines{user-select:none}
 .sortable-drag{opacity:.9}
 
 .toast{position:fixed;bottom:calc(18px + env(safe-area-inset-bottom,0px));left:0;right:0;margin:auto;width:fit-content;max-width:92%;
@@ -352,9 +356,20 @@ dialog.sheet{max-height:min(88vh,760px);overflow:auto}
 .vtag.agg{background:transparent;box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--c,var(--muted)) 50%,transparent);border:0;font-weight:600;color:var(--muted)}
 .vtag.wait.agg{color:var(--warn)}
 @media (min-width:1240px){
-  body[data-mode="tree"] .vtags, body[data-mode="list"] .vtags, body[data-mode="urgent"] .vtags, body[data-mode="agenda"] .vtags{position:absolute;left:calc(100% + 14px);flex-direction:column;align-items:flex-start;gap:3px}
+  body[data-mode="tree"] .vtags, body[data-mode="list"] .vtags, body[data-mode="urgent"] .vtags, body[data-mode="agenda"] .vtags{position:absolute;left:calc(100% + 14px);flex-wrap:nowrap;max-width:calc((100vw - 100%) / 2 - 34px);overflow:hidden;direction:rtl;justify-content:flex-end}
 }
 .stpanel .chip svg{flex:none}
+.vinh{border:0;background:none;padding:0;width:16px;height:22px;display:grid;place-items:center;flex:none;cursor:pointer}
+.vinh i{width:9px;height:9px;border-radius:50%;background:var(--c);box-shadow:0 0 0 2px color-mix(in srgb,var(--c) 25%,transparent);opacity:.75}
+.chip.inherited{opacity:.6;cursor:default}
+.hintline{font-size:.82rem;color:var(--muted)}
+.ver{text-align:center;color:var(--muted);font-size:.78rem;opacity:.7;padding-bottom:calc(18px + env(safe-area-inset-bottom,0px));margin-top:-70px}
+.pdesc{display:flex;gap:6px;width:100%;padding-inline-start:36px;align-items:center}
+.pdesc input{flex:1;min-width:0;font:inherit;font-size:.9rem;color:var(--ink);background:var(--bg);border:1px dashed var(--line);border-radius:8px;padding:5px 10px}
+.btn.sm{padding:4px 10px;font-size:.82rem}
+.descall{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:.9rem;color:var(--muted);margin-bottom:12px}
+.agenda-mode{margin-inline-start:auto}
+.agenda-mode .seg{font-size:.85rem;padding:4px 10px}
 .ksub{font-family:var(--font-display);font-weight:var(--display-weight,400);font-size:1.1rem;margin:18px 0 4px}
 .chip.outside .dot{box-shadow:inset 0 0 0 2px var(--surface)}
 .kadd{flex:1;min-width:180px;font:inherit;font-size:.9rem;color:var(--ink);background:var(--surface);border:1px dashed var(--line);border-radius:999px;padding:3px 12px;outline:none}
@@ -514,6 +529,7 @@ dialog.sheet{max-height:min(88vh,760px);overflow:auto}
     <ul class="assigned" id="assigned"></ul>
   </div>
 </div>
+<div class="ver" dir="rtl">גרסה 15 · 10.11.2026</div>
 <div class="toast" id="toast" hidden><span id="toast-msg"></span><button id="toast-btn" type="button" hidden></button></div>
 
 <dialog id="search" class="search" aria-label="חיפוש">
@@ -586,7 +602,7 @@ dialog.sheet{max-height:min(88vh,760px);overflow:auto}
         <span class="g-ic g-flag g-tag"><b class="g-n">7</b><svg width="17" height="17" viewBox="0 0 18 18" fill="none"><path d="M4.5 15.5V3M4.5 3.5h8.5l-2 3 2 3H4.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" fill="currentColor" fill-opacity=".25"/></svg></span>
         <span class="g-ic g-on g-tag"><b class="g-n">8</b><svg width="17" height="17" viewBox="0 0 18 18" fill="none"><path d="M4 2.5h7l3 3v10H4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M6.5 8.5h5M6.5 11.5h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
         <span class="g-ic g-tag"><b class="g-n">9</b><svg width="17" height="17" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="6" r="3" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 15.5c.8-3 3-4.5 5.5-4.5s4.7 1.5 5.5 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
-        <span class="g-ic g-on g-tag"><b class="g-n">10</b><svg width="17" height="17" viewBox="0 0 18 18" fill="none"><path d="M3 6h10.5M11 3.5L13.5 6 11 8.5M15 12H4.5M7 9.5L4.5 12 7 14.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="g-ic g-on g-tag"><b class="g-n">10</b><svg width="17" height="17" viewBox="0 0 18 18" fill="none"><path d="M5 2.6h2.3l1.2 3.1-1.6 1.1a8.2 8.2 0 004.3 4.3l1.1-1.6 3.1 1.2V13a1.8 1.8 0 01-1.9 1.8A12.6 12.6 0 013.2 4.5 1.8 1.8 0 015 2.6z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></span>
         <span class="g-ic g-tag"><b class="g-n">11</b><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 3.5v11M3.5 9h11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
         <span class="g-ic g-tag"><b class="g-n">12</b><svg width="17" height="17" viewBox="0 0 18 18" fill="none"><path d="M3.5 5h11M7 5V3.5h4V5M5 5l.8 9.5h6.4L13 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </div>
@@ -601,7 +617,7 @@ dialog.sheet{max-height:min(88vh,760px);overflow:auto}
         <li><b class="g-num">7</b><span><b>חשיבות:</b> לחיצה עוברת בין רגילה, חשובה וחשובה מאוד.</span></li>
         <li><b class="g-num">8</b><span><b>תיאור ותגובות.</b> המספר על הכפתור סופר תגובות.</span></li>
         <li><b class="g-num">9</b><span><b>שיוך:</b> בעלים אחד, ועוד כמה אנשים ב"גם אצל".</span></li>
-        <li><b class="g-num">10</b><span><b>כדי לקדם:</b> בעצמי, מול אדם, או ממתין למשהו.</span></li>
+        <li><b class="g-num">10</b><span><b>כדי לקדם:</b> בעצמי, מול אנשים (אפשר כמה), או ממתין למשהו.</span></li>
         <li><b class="g-num">11</b><span><b>תת-משימה חדשה.</b></span></li>
         <li><b class="g-num">12</b><span><b>מחיקה</b> לפח, עם כפתור ביטול לכמה שניות.</span></li>
       </ol>
@@ -639,7 +655,7 @@ dialog.sheet{max-height:min(88vh,760px);overflow:auto}
       <div class="g-tip"><b>"גם אצל"</b><span>משימה ששויכה לכם מופיעה בתצוגה שלכם, באזור "שויכו גם ל...", יחד עם כל תתי-המשימות שלה.</span></div>
       <div class="g-tip"><b>מאז הביקור הקודם</b><span>בכניסה מופיע סיכום של מה אחרים הוסיפו, סימנו או הגיבו, והמשימות האלו צבועות. "ראיתי" מנקה.</span></div>
       <div class="g-tip"><b>משימות חוזרות</b><span>בחלונית הדדליין בוחרים כל יום, שבוע או חודש. סימון "בוצעה" מקפיץ את המשימה לתאריך הבא ופותח מחדש את תתי-המשימות.</span></div>
-      <div class="g-tip"><b>כדי לקדם</b><span>"מול נועה" מוסיף תגית בצבע שלה בצד המשימה. אפשר גם מישהו מחוץ לצוות, פשוט כותבים את השם. משימת אב סגורה מראה "בפנים: מול…".</span></div>
+      <div class="g-tip"><b>כדי לקדם</b><span>"מול נועה" מוסיף תגית בצבע שלה בצד המשימה, ועובר אוטומטית לכל תתי-המשימות. אפשר כמה אנשים, גם מחוץ לצוות: פשוט כותבים את השם. משימת אב סגורה מראה "בפנים: מול…".</span></div>
       <div class="g-tip"><b>הערות</b><span>כפתור ההערה פותח תיבת טקסט. Enter מסיים, Shift+Enter יורד שורה, וההערה נשארת באפור מתחת למשימה.</span></div>
       <div class="g-tip"><b>שורה ריקה נעלמת</b><span>משימה חדשה שיצאתם ממנה בלי לכתוב כלום נמחקת לבד.</span></div>
       <div class="g-tip"><b>עיצוב אישי</b><span>"עיצוב" בכותרת: 10 פלטות, 6 גופנים, בהיר או כהה. נשמר רק במכשיר שלכם.</span></div>
@@ -689,6 +705,7 @@ dialog.sheet{max-height:min(88vh,760px);overflow:auto}
 
 <dialog id="people" class="sheet">
   <h2>אנשים בקבוצה</h2>
+  <div class="descall"><span>הצגת תיאורים ליד השמות:</span><div class="modes" role="group" aria-label="הצגת תיאורים לכולם"><button class="seg" data-alldesc="1" type="button">לכולם</button><button class="seg" data-alldesc="0" type="button">לאף אחד</button></div></div>
   <ul class="plist" id="plist"></ul>
   <div class="addp" id="addp"><input id="addp-input" placeholder="שם של אדם חדש" autocomplete="off" enterkeyhint="done"><button class="btn primary" type="button" id="addp-btn">הוספה</button></div>
   <p class="hint">"זה אני" נשמר רק במכשיר הזה. משימות שתוסיף בתצוגה "הכל" יירשמו עליך.</p>
@@ -714,7 +731,7 @@ const ICON = {
   person:'<svg width="17" height="17" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="6" r="3" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 15.5c.8-3 3-4.5 5.5-4.5s4.7 1.5 5.5 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
   cal:'<svg width="17" height="17" viewBox="0 0 18 18" fill="none"><rect x="2.8" y="3.8" width="12.4" height="11.4" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M2.8 7.5h12.4M6 2.5v2.6M12 2.5v2.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
   flag:'<svg width="17" height="17" viewBox="0 0 18 18" fill="none"><path d="M4.5 15.5V3M4.5 3.5h8.5l-2 3 2 3H4.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-  flow:'<svg width="17" height="17" viewBox="0 0 18 18" fill="none"><path d="M3 6h10.5M11 3.5L13.5 6 11 8.5M15 12H4.5M7 9.5L4.5 12 7 14.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  flow:'<svg width="17" height="17" viewBox="0 0 18 18" fill="none"><path d="M5 2.6h2.3l1.2 3.1-1.6 1.1a8.2 8.2 0 004.3 4.3l1.1-1.6 3.1 1.2V13a1.8 1.8 0 01-1.9 1.8A12.6 12.6 0 013.2 4.5 1.8 1.8 0 015 2.6z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',
   trash:'<svg width="17" height="17" viewBox="0 0 18 18" fill="none"><path d="M3.5 5h11M7 5V3.5h4V5M5 5l.8 9.5h6.4L13 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>'
 };
 const $ = s => document.querySelector(s);
@@ -795,7 +812,7 @@ let me = GL.get('me', ''), view = GL.get('view', 'all');
 const collapsed = new Set(GL.get('collapsed', [])), openDesc = new Set(GL.get('openDesc', []));
 let hideDone = GL.get('hideDone', false), mode = GL.get('mode', 'tree');
 if (!['tree','table','list','urgent','agenda','archive','trash'].includes(mode)) mode = 'tree';
-let kindF = GL.get('kindF', 'all'), agendaFor = GL.get('agendaFor', 'all');
+let kindF = GL.get('kindF', 'all'), agendaFor = GL.get('agendaFor', 'all'), agendaFlat = GL.get('agendaFlat', false);
 if (!['all','self','person','wait'].includes(kindF)) kindF = 'all';
 let onlyImp = GL.get('onlyImp', false), archDays = GL.get('archDays', 7), confirmKey = null, confirmTimer = null;
 let cMap = new Map();
@@ -812,6 +829,7 @@ function buildIndex(){
     if (!kidsMap.has(p)) kidsMap.set(p, []);
     kidsMap.get(p).push({...t, id});
   }
+  viaCache = new Map();
   cMap = new Map();
   for (const [cid, c] of Object.entries(C)) { if (!cMap.has(c.task)) cMap.set(c.task, []); cMap.get(c.task).push({...c, id:cid}); }
   for (const list of cMap.values()) list.sort((a,b) => (a.at||0) - (b.at||0));
@@ -831,6 +849,9 @@ const userName = id => (U[id] && U[id].name) || 'ללא שיוך';
 const viaOf = id => U[id] || K[id] || null;
 const viaColor = id => (viaOf(id) && viaOf(id).color) || 'var(--muted)';
 const viaName = id => (viaOf(id) && viaOf(id).name) || 'מישהו';
+// what to show for a person: the name, plus the description when that person is set to show it
+const labelOf = pers => pers ? (pers.name || 'מישהו') + (pers.desc && pers.showDesc !== false ? ' · ' + pers.desc : '') : 'מישהו';
+const viaLabel = id => labelOf(viaOf(id));
 const contactsSorted = () => Object.entries(K).map(([id,c]) => ({...c, id})).sort((a,b) => (a.name||'').localeCompare(b.name||'', 'he'));
 const usersSorted = () => Object.entries(U).map(([id,u]) => ({...u, id})).sort((a,b) => (a.order||0)-(b.order||0));
 
@@ -947,41 +968,69 @@ function renderUrgent(X){
 
 
 /* ---------- how a task moves forward: by me, with a person, or waiting ---------- */
-const kindOf = t => t && t.status === 'person' && viaOf(t.via) ? 'person' : t && t.status === 'wait' ? 'wait' : 'self';
+// people a task is marked "with" by itself (older tasks stored a single person in "via")
+const ownVias = t => (t ? (Array.isArray(t.vias) ? t.vias : (t.status === 'person' && t.via ? [t.via] : [])) : []).filter(viaOf);
+// people a task is waiting on: its own, plus everyone marked on any task above it
+let viaCache = new Map();
+function effVias(id){
+  if (viaCache.has(id)) return viaCache.get(id);
+  const t = T[id]; if (!t) return [];
+  const own = ownVias(t), inh = [];
+  for (const a of ancestors(id)) { const at = T[a]; if (at && !at.done) for (const v of ownVias(at)) if (!own.includes(v) && !inh.includes(v)) inh.push(v); }
+  const r = {own, inh, all:[...own, ...inh]};
+  viaCache.set(id, r); return r;
+}
+const kindOf = t => t && t.status === 'wait' ? 'wait' : t && t.id !== undefined && effVias(t.id).all.length ? 'person' : t && ownVias(t).length ? 'person' : 'self';
 const kindOk = t => kindF === 'all' || kindOf(t) === kindF;
-const I_WAIT = '<svg width="12" height="12" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M5 2.5h8M5 15.5h8M6 2.5c0 4 6 4.5 6 6.5s-6 2.5-6 6.5M12 2.5c0 4-6 4.5-6 6.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
-function ownTag(t){
+const I_WAIT = '<svg width="12" height="12" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4.5 2.5h9M4.5 15.5h9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M6 2.5h6v2.2L9 9 6 4.7zM6 15.5h6v-2.2L9 9l-3 4.3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M7.4 14.4h3.2L9 12.2z" fill="currentColor"/></svg>';
+function ownTag(t, show){
+  show = show || {person:true, wait:true};
   if (t.done) return '';
   const k = kindOf(t);
-  if (k === 'person') return `<button class="vtag" style="--c:${viaColor(t.via)}" data-act="status" title="מחכה לקידום מול ${esc(viaName(t.via))}" type="button"><i class="vdot"></i>מול ${esc(viaName(t.via))}</button>`;
-  if (k === 'wait') return `<button class="vtag wait" data-act="status" title="ממתינה${t.waitFor ? ': ' + esc(t.waitFor) : ''}" type="button">${I_WAIT}<span>${t.waitFor ? 'ממתין: ' + esc(t.waitFor) : 'ממתין'}</span></button>`;
+  const ev = effVias(t.id);
+  // inherited people show as a small dot, so subtasks are not buried under their parent's tags
+  const tag = (v, inherited) => inherited
+    ? `<button class="vinh" style="--c:${viaColor(v)}" data-act="status" title="מול ${esc(viaLabel(v))} (עובר ממשימת האב)" aria-label="מול ${esc(viaName(v))}, עובר ממשימת האב" type="button"><i></i></button>`
+    : `<button class="vtag" style="--c:${viaColor(v)}" data-act="status" title="מחכה לקידום מול ${esc(viaLabel(v))}" type="button"><i class="vdot"></i>מול ${esc(viaLabel(v))}</button>`;
+  const people = show.person ? ev.own.map(v => tag(v, false)).join('') + ev.inh.map(v => tag(v, true)).join('') : '';
+  if (k === 'person') return people;
+  if (k === 'wait' && !show.wait) return people;
+  if (k === 'wait') return people + `<button class="vtag wait" data-act="status" title="ממתינה${t.waitFor ? ': ' + esc(t.waitFor) : ''}" type="button">${I_WAIT}<span>${t.waitFor ? 'ממתין: ' + esc(t.waitFor) : 'ממתין'}</span></button>`;
   return '';
 }
-function aggTags(id){
+function aggTags(id, show){
+  show = show || {person:true, wait:true};
   const people = new Map(); let waiting = 0;
+  const key = v => (viaName(v) || '').trim().replace(/\s+/g, ' ');   // same name = same person, even if entered twice
+  const mine = new Set(effVias(id).all.map(key));   // people already shown on the parent itself
   for (const d of descendants(id)) {
     const t = T[d]; if (!t || t.done || isArchived(t)) continue;
-    const k = kindOf(t);
-    if (k === 'person') people.set(t.via, (people.get(t.via) || 0) + 1); else if (k === 'wait') waiting++;
+    for (const v of ownVias(t)) { const k = key(v); if (mine.has(k)) continue; const e = people.get(k) || {v, n:0}; e.n++; people.set(k, e); }
+    if (kindOf({...t, id:d}) === 'wait') waiting++;
   }
   let h = '';
-  for (const [u, n] of people) h += `<span class="vtag agg" style="--c:${viaColor(u)}" title="בתוכה ${n === 1 ? 'משימה אחת' : n + ' משימות'} לקידום מול ${esc(viaName(u))}"><i class="vdot"></i>בפנים: מול ${esc(viaName(u))}${n > 1 ? ' ×' + n : ''}</span>`;
-  if (waiting) h += `<span class="vtag wait agg">${I_WAIT}<span>בפנים: ${waiting === 1 ? 'ממתינה אחת' : waiting + ' ממתינות'}</span></span>`;
+  if (show.person) for (const {v: u, n} of people.values()) h += `<span class="vtag agg" style="--c:${viaColor(u)}" title="בתוכה ${n === 1 ? 'משימה אחת' : n + ' משימות'} לקידום מול ${esc(viaLabel(u))}"><i class="vdot"></i>בפנים: מול ${esc(viaLabel(u))}${n > 1 ? ' ×' + n : ''}</span>`;
+  if (waiting && show.wait) h += `<span class="vtag wait agg">${I_WAIT}<span>בפנים: ${waiting === 1 ? 'ממתינה אחת' : waiting + ' ממתינות'}</span></span>`;
   return h;
 }
+const tagFilter = () => ({person: kindF === 'all' || kindF === 'person', wait: kindF === 'all' || kindF === 'wait'});
 function tagsHTML(t, opts){
   if (opts && opts.noTags) return '';
   const collapsedParent = collapsed.has(t.id) && kids(t.id).length && !(opts && opts.flat);
-  const h = ownTag(t) + (collapsedParent ? aggTags(t.id) : '');
+  const show = tagFilter();
+  const h = ownTag(t, show) + (collapsedParent ? aggTags(t.id, show) : '');
   return h ? `<span class="vtags">${h}</span>` : '';
 }
 function stHTML(t){
-  const k = kindOf(t), us = usersSorted();
-  const chip = (u, outside) => `<button class="chip ${outside ? 'outside' : ''}" style="--c:${u.color}" aria-pressed="${k==='person' && t.via===u.id}" data-act="set-status" data-s="person" data-u="${u.id}" type="button"><span class="dot"></span>מול ${esc(u.name)}</button>`;
+  const k = kindOf(t), us = usersSorted(), ev = effVias(t.id);
+  const chip = (u, outside) => ev.inh.includes(u.id)
+    ? `<span class="chip ${outside ? 'outside' : ''} inherited" style="--c:${u.color}" title="עובר ממשימת האב. משנים את זה באב." aria-pressed="true"><span class="dot"></span>מול ${esc(labelOf(u))}</span>`
+    : `<button class="chip ${outside ? 'outside' : ''}" style="--c:${u.color}" aria-pressed="${ev.own.includes(u.id)}" data-act="set-status" data-s="person" data-u="${u.id}" type="button"><span class="dot"></span>מול ${esc(labelOf(u))}</button>`;
   const people = us.map(u => chip(u, false)).join('');
   const outside = contactsSorted().map(c => chip(c, true)).join('');
   return `<div class="assign stpanel"><div class="line">כדי לקדם: <button class="chip" aria-pressed="${k==='self'}" data-act="set-status" data-s="self" type="button">בעצמי</button>${people}<button class="chip" aria-pressed="${k==='wait'}" data-act="set-status" data-s="wait" type="button">${I_WAIT} ממתין</button></div>
     <div class="line">מחוץ לצוות: ${outside}<input class="kadd" data-kfor="${t.id}" id="kadd-${t.id}" placeholder="+ שם של מישהו אחר, ואז Enter" autocomplete="off" enterkeyhint="done" aria-label="אדם מחוץ לצוות"></div>
+    ${ev.inh.length ? '<div class="line hintline">אפשר לבחור כמה אנשים. מי שמסומן במשימת האב עובר לכל תתי-המשימות שלה.</div>' : '<div class="line hintline">אפשר לבחור כמה אנשים. כולם יעברו גם לתתי-המשימות.</div>'}
     ${k === 'wait' ? `<div class="line"><input class="win" data-wfor="${t.id}" id="win-${t.id}" value="${esc(drafts['w:'+t.id] ?? t.waitFor ?? '')}" placeholder="למה היא ממתינה? למשל: תשובה מהמרצה (לא חובה)" autocomplete="off" enterkeyhint="done" aria-label="למה היא ממתינה"></div>` : ''}</div>`;
 }
 function descNote(t){
@@ -1015,7 +1064,7 @@ function renderTable(X, vis, roots){
     const due = t.due ? dueInfo(t.due) : null, prio = t.prio || 0, nc = commentsOf(t.id).length;
     const owner = t.owner && U[t.owner] ? `<span class="dot" style="--c:${userColor(t.owner)}"></span>${esc(userName(t.owner))}` : '<span class="dash">—</span>';
     const also = (t.assignees||[]).filter(a => U[a] && a !== t.owner).map(a => `<span class="dot ring" style="--c:${userColor(a)}" title="גם: ${esc(userName(a))}"></span>`).join('');
-    const tags = ownTag(t) + (!open && total ? aggTags(t.id) : '');
+    const tags = ownTag(t, tagFilter()) + (!open && total ? aggTags(t.id, tagFilter()) : '');
     rows.push(`<tr class="${t.done ? 'done' : ''} ${ctx ? 'ctx' : ''} ${depth === 0 ? 'top' : ''}" data-id="${t.id}">
       <td class="c-check"><button class="check" role="checkbox" aria-checked="${!!t.done}" data-act="toggle" aria-label="בוצעה" type="button">${t.done ? ICON.check : ''}</button></td>
       <td class="c-name"><div class="tname" style="--d:${depth}">
@@ -1041,19 +1090,27 @@ function renderTable(X, vis, roots){
 function renderAgenda(X){
   const rel = relFor(X);
   const open = Object.keys(T).map(task).filter(t => !t.done && !isArchived(t) && rel(t));
-  const byVia = new Map();
-  open.filter(t => kindOf(t) === 'person').forEach(t => { if (!byVia.has(t.via)) byVia.set(t.via, []); byVia.get(t.via).push(t); });
+  const byVia = new Map(), counts = new Map();
+  open.forEach(t => {
+    const ev = effVias(t.id);
+    for (const v of ev.all) {
+      counts.set(v, (counts.get(v) || 0) + 1);
+      if (ev.own.includes(v) && !ancestors(t.id).some(a => T[a] && !T[a].done && ownVias(T[a]).includes(v))) { if (!byVia.has(v)) byVia.set(v, []); byVia.get(v).push(t); }
+    }
+  });
   const waiting = open.filter(t => kindOf(t) === 'wait');
   const us = [...usersSorted(), ...contactsSorted().map(c => ({...c, outside:true}))].filter(u => byVia.has(u.id));
   if (agendaFor !== 'all' && agendaFor !== 'wait' && !byVia.has(agendaFor)) agendaFor = 'all';
   const sortT = list => list.sort((a,b) => ((b.prio||0)-(a.prio||0)) || ((a.due||'9') < (b.due||'9') ? -1 : (a.due||'9') > (b.due||'9') ? 1 : 0) || (a.order||0)-(b.order||0));
-  let h = `<li class="arch-head"><button class="chip" data-agenda="all" aria-pressed="${agendaFor==='all'}" type="button">כולם</button>${us.map(u => `<button class="chip" style="--c:${u.color}" data-agenda="${u.id}" aria-pressed="${agendaFor===u.id}" type="button"><span class="dot"></span>${esc(u.name)} <span class="ucount">${byVia.get(u.id).length}</span></button>`).join('')}${waiting.length ? `<button class="chip" data-agenda="wait" aria-pressed="${agendaFor==='wait'}" type="button">${I_WAIT} ממתינות <span class="ucount">${waiting.length}</span></button>` : ''}</li>`;
+  let h = `<li class="arch-head"><button class="chip" data-agenda="all" aria-pressed="${agendaFor==='all'}" type="button">כולם</button>${us.map(u => `<button class="chip" style="--c:${u.color}" data-agenda="${u.id}" aria-pressed="${agendaFor===u.id}" type="button"><span class="dot"></span>${esc(u.name)} <span class="ucount">${counts.get(u.id)}</span></button>`).join('')}${waiting.length ? `<button class="chip" data-agenda="wait" aria-pressed="${agendaFor==='wait'}" type="button">${I_WAIT} ממתינות <span class="ucount">${waiting.length}</span></button>` : ''}<span class="agenda-mode modes" role="group" aria-label="איך להציג"><button class="seg" data-aflat="0" aria-pressed="${!agendaFlat}" type="button">לפי משימות אב</button><button class="seg" data-aflat="1" aria-pressed="${agendaFlat}" type="button">כל המשימות ברצף</button></span></li>`;
   const row = (t, noTags) => rowHTML(t, 0, {flat:true, noDrag:true, enterBlur:true, noTags, path: pathLine(t)});
   let any = false;
   for (const u of us) {
     if (agendaFor !== 'all' && agendaFor !== u.id) continue;
     any = true;
-    h += `<li class="ugroup"><h2 class="section-title agenda-head" style="--c:${u.color}"><span class="dot"></span>מול ${esc(u.name)} <span class="ucount">${byVia.get(u.id).length}${u.outside ? ' · מחוץ לצוות' : ''}</span></h2><ul class="assigned">${sortT(byVia.get(u.id)).map(t => row(t, true)).join('')}</ul></li>`;
+    h += `<li class="ugroup"><h2 class="section-title agenda-head" style="--c:${u.color}"><span class="dot"></span>מול ${esc(labelOf(u))} <span class="ucount">${counts.get(u.id)}${u.outside ? ' · מחוץ לצוות' : ''}</span></h2><ul class="assigned">${agendaFlat
+      ? (() => { const all = []; (function w(p){ for (const c of kids(p)) { if (!c.done && !isArchived(c) && rel(c) && effVias(c.id).all.includes(u.id)) all.push(c); w(c.id); } })(''); return all.map(t => rowHTML(t, 0, {flat:true, noDrag:true, enterBlur:true, noTags:true, path: pathLine(t)})).join(''); })()
+      : sortT(byVia.get(u.id)).map(t => rowHTML(t, 0, {noDrag:true, noTags:true, path: pathLine(t)})).join('')}</ul></li>`;
   }
   if (waiting.length && (agendaFor === 'all' || agendaFor === 'wait')) {
     any = true;
@@ -1219,6 +1276,7 @@ function render(){
   restoreFocus(f);
   if (focusReq && Date.now() - (focusReq.at || 0) > 3000) focusReq = null;
   setupSortables();
+  if (typeof scheduleLines === 'function') scheduleLines();
   rendering = false;
 }
 
@@ -1227,7 +1285,7 @@ function setupSortables(){
   if (!window.Sortable) return;
   document.querySelectorAll('ul.sortable').forEach(ul => {
     sortables.push(new Sortable(ul, {
-      group:'tasks', handle:'.grip', animation:150, fallbackOnBody:true, swapThreshold:.6, invertSwap:true,
+      group:'tasks', handle:'.grip', draggable:'li[data-id]', animation:150, fallbackOnBody:true, swapThreshold:.6, invertSwap:true,
       ghostClass:'ghost', emptyInsertThreshold:8,
       onStart(){ dragging = true; },
       onEnd(e){ dragging = false; onDrop(e); }
@@ -1265,7 +1323,7 @@ function setCaret(el, pos){
   if (t && t.nodeType === 3) r.setStart(t, Math.max(0, Math.min(pos, t.length))); else r.setStart(el, 0);
   r.collapse(true); const s = getSelection(); s.removeAllRanges(); s.addRange(r);
 }
-function autosize(ta){ ta.style.height = 'auto'; ta.style.height = (ta.scrollHeight + 2) + 'px'; }
+function autosize(ta){ ta.style.height = 'auto'; ta.style.height = (ta.scrollHeight + 2) + 'px'; if (typeof scheduleLines === 'function') scheduleLines(); }
 
 /* ---------- actions ---------- */
 const sticky = new Set();   // tasks created in this visit stay visible even when a filter would hide them
@@ -1366,10 +1424,13 @@ document.addEventListener('click', e => {
   else if (act === 'status') { flushWait(); stFor = stFor === id ? null : id; dueFor = null; assignFor = null; render(); }
   else if (act === 'set-status') {
     const st = b.dataset.s;
-    if (st === 'person') patch(id, {status:'person', via:b.dataset.u}, 'edit');
-    else if (st === 'wait') patch(id, {status:'wait', via:''}, 'edit');
-    else patch(id, {status:'', via:''}, 'edit');
-    if (st !== 'wait') stFor = null;
+    if (st === 'person') {
+      const cur = ownVias(t), u = b.dataset.u;
+      const vias = cur.includes(u) ? cur.filter(x => x !== u) : [...cur, u];
+      patch(id, {status: vias.length ? 'person' : '', vias, via:''}, 'edit');
+    }
+    else if (st === 'wait') patch(id, {status:'wait', vias:[], via:''}, 'edit');
+    else { patch(id, {status:'', vias:[], via:''}, 'edit'); stFor = null; }
     render();
     if (st === 'wait') { const w = document.getElementById('win-' + id); if (w) w.focus(); }
   }
@@ -1752,6 +1813,7 @@ document.addEventListener('keydown', e => {
   }
 });
 $('#kinds').addEventListener('click', e => { const b = e.target.closest('[data-kind]'); if (!b) return; sticky.clear(); kindF = b.dataset.kind; GL.set('kindF', kindF); render(); });
+$('#urgent').addEventListener('click', e => { const f = e.target.closest('[data-aflat]'); if (f) { agendaFlat = f.dataset.aflat === '1'; GL.set('agendaFlat', agendaFlat); render(); return; } });
 $('#urgent').addEventListener('click', e => { const b = e.target.closest('[data-agenda]'); if (!b) return; agendaFor = b.dataset.agenda; GL.set('agendaFor', agendaFor); render(); });
 
 
@@ -1767,10 +1829,46 @@ document.addEventListener('keydown', e => {
   const el = e.target; if (!el.classList || !el.classList.contains('kadd') || e.key !== 'Enter' || e.isComposing) return;
   e.preventDefault();
   const v = el.value.trim(), tid = el.dataset.kfor; if (!v || !T[tid]) return;
-  const existing = contactsSorted().find(c => c.name === v) || usersSorted().find(u => u.name === v);
+  const existing = contactsSorted().find(c => c.name.trim() === v) || usersSorted().find(u => u.name.trim() === v);
   const cid = existing ? existing.id : newContact(v);
-  patch(tid, {status:'person', via:cid}, 'edit'); stFor = null; render();
+  const cur = ownVias(T[tid]); patch(tid, {status:'person', vias: cur.includes(cid) ? cur : [...cur, cid], via:''}, 'edit'); render();
+  const again = document.getElementById('kadd-' + tid); if (again) again.focus();
 });
+
+
+/* ---------- tree guide lines ---------- */
+function drawLines(){
+  const tree = $('#tree');
+  const old = tree.querySelector(':scope > .tlines'); if (old) old.remove();
+  if (mode !== 'tree' || tree.hidden) return;
+  const base = tree.getBoundingClientRect();
+  const W = 1.5; let h = '';
+  tree.querySelectorAll('ul.kids').forEach(ul => {
+    const kidsLis = [...ul.children].filter(li => li.dataset && li.dataset.id);
+    if (!kidsLis.length) return;
+    const pc = ul.parentElement.querySelector(':scope > .row .check'); if (!pc) return;
+    const pr = pc.getBoundingClientRect();
+    const x = pr.left + pr.width / 2 - base.left, y0 = pr.bottom - base.top;
+    let yLast = null;
+    for (const li of kidsLis) {
+      const c = li.querySelector(':scope > .row .check'); if (!c) continue;
+      const r = c.getBoundingClientRect();
+      const y = r.top + r.height / 2 - base.top;
+      const edge = (r.left + r.right) / 2 < x + base.left ? r.right - base.left : r.left - base.left;
+      h += `<i style="left:${Math.min(x, edge)}px;top:${y - W/2}px;width:${Math.abs(x - edge)}px;height:${W}px"></i>`;
+      yLast = y;
+    }
+    if (yLast !== null) h += `<i style="left:${x - W/2}px;top:${y0}px;width:${W}px;height:${Math.max(0, yLast - y0 + W/2)}px"></i>`;
+  });
+  if (!h) return;
+  const layer = document.createElement('div'); layer.className = 'tlines'; layer.setAttribute('aria-hidden', 'true'); layer.innerHTML = h;
+  tree.prepend(layer);
+}
+let linesRaf = 0;
+const scheduleLines = () => { cancelAnimationFrame(linesRaf); linesRaf = requestAnimationFrame(drawLines); };
+if (window.ResizeObserver) new ResizeObserver(scheduleLines).observe($('#tree'));
+window.addEventListener('resize', scheduleLines);
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(scheduleLines);
 
 /* ---------- people dialog ---------- */
 function openPeople(){ renderPeople(); const d = $('#people'); if (!d.open) d.showModal(); }
@@ -1784,6 +1882,7 @@ function renderContacts(){
       <button class="swatch" style="--c:${c.color}" data-kact="palette" aria-label="בחירת צבע" type="button"></button>
       <input value="${esc(c.name)}" data-kact="name" id="kname-${c.id}" aria-label="שם">
       <button class="icon del" style="opacity:1" data-kact="del" aria-label="הסרה" title="הסרה" type="button">${ICON.trash}</button>
+      <div class="pdesc"><input value="${esc(c.desc || '')}" data-kact="desc" id="kdesc-${c.id}" placeholder="תיאור (לא חובה), למשל: רכז הקורס" aria-label="תיאור"><button class="btn sm" aria-pressed="${c.showDesc !== false}" data-kact="showdesc" type="button" title="האם להציג את התיאור ליד השם">${c.showDesc !== false ? 'שם ותיאור' : 'רק שם'}</button></div>
       ${paletteFor===c.id ? `<div class="palette">${PALETTE.map(x => `<button class="swatch" style="--c:${x}" aria-pressed="${x===c.color}" data-kact="color" data-c="${x}" aria-label="צבע" type="button"></button>`).join('')}</div>` : ''}
     </div></li>`).join('') : '';
 }
@@ -1791,6 +1890,7 @@ $('#klist').addEventListener('click', e => {
   const b = e.target.closest('[data-kact]'); if (!b) return;
   const id = b.closest('li[data-k]').dataset.k, act = b.dataset.kact;
   if (act === 'palette') { paletteFor = paletteFor === id ? null : id; renderContacts(); }
+  else if (act === 'showdesc') { const v = K[id].showDesc === false; K[id] = {...K[id], showDesc:v}; write(B.update('contacts', id, {showDesc:v})); renderContacts(); render(); }
   else if (act === 'color') { K[id] = {...K[id], color:b.dataset.c}; write(B.update('contacts', id, {color:b.dataset.c})); paletteFor = null; renderContacts(); render(); }
   else if (act === 'del') {
     const backup = {...K[id]}; delete K[id]; write(B.del('contacts', id)); renderContacts(); render();
@@ -1798,16 +1898,27 @@ $('#klist').addEventListener('click', e => {
   }
 });
 $('#klist').addEventListener('change', e => {
-  const el = e.target; if (el.dataset.kact !== 'name') return;
+  const el = e.target;
+  if (el.dataset.kact === 'desc') { const id = el.closest('li[data-k]').dataset.k, v = el.value.trim(); if (K[id] && (K[id].desc || '') !== v) { K[id] = {...K[id], desc:v}; write(B.update('contacts', id, {desc:v})); render(); } return; }
+  if (el.dataset.kact !== 'name') return;
   const id = el.closest('li[data-k]').dataset.k, v = el.value.trim();
   if (v && K[id] && v !== K[id].name) { K[id] = {...K[id], name:v}; write(B.update('contacts', id, {name:v})); render(); }
 });
-function addContactFromDialog(){ const inp = $('#addk-input'), v = inp.value.trim(); if (!v) return; newContact(v); inp.value = ''; renderContacts(); render(); inp.focus(); }
+$('#people').addEventListener('click', e => {
+  const b = e.target.closest('[data-alldesc]'); if (!b) return;
+  const v = b.dataset.alldesc === '1';
+  for (const id of Object.keys(U)) if ((U[id].showDesc !== false) !== v) { U[id] = {...U[id], showDesc:v}; write(B.update('users', id, {showDesc:v})); }
+  for (const id of Object.keys(K)) if ((K[id].showDesc !== false) !== v) { K[id] = {...K[id], showDesc:v}; write(B.update('contacts', id, {showDesc:v})); }
+  renderPeople(); render();
+});
+function addContactFromDialog(){ const inp = $('#addk-input'), v = inp.value.trim(); if (!v) return; if (contactsSorted().some(c => c.name.trim() === v)) { toast(`${v} כבר ברשימה.`); return; } newContact(v); inp.value = ''; renderContacts(); render(); inp.focus(); }
 $('#addk-input').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.isComposing) { e.preventDefault(); addContactFromDialog(); } });
 $('#addk-btn').addEventListener('click', addContactFromDialog);
 
 function renderPeople(){
   renderContacts();
+  const everyone = [...Object.values(U), ...Object.values(K)];
+  document.querySelectorAll('[data-alldesc]').forEach(b => b.setAttribute('aria-pressed', everyone.length > 0 && everyone.every(x => (x.showDesc !== false) === (b.dataset.alldesc === '1'))));
   const us = usersSorted();
   $('#plist').innerHTML = us.length ? us.map(u => `<li data-u="${u.id}">
     <div class="prow">
@@ -1815,6 +1926,7 @@ function renderPeople(){
       <input value="${esc(u.name)}" data-pact="name" id="pname-${u.id}" aria-label="שם">
       <button class="btn" aria-pressed="${u.id===me}" data-pact="me" type="button">זה אני</button>
       <button class="icon del" style="opacity:1" data-pact="del" aria-label="הסרה" title="הסרה" type="button">${ICON.trash}</button>
+      <div class="pdesc"><input value="${esc(u.desc || '')}" data-pact="desc" id="pdesc-${u.id}" placeholder="תיאור (לא חובה), למשל: אחראית שיווק" aria-label="תיאור"><button class="btn sm" aria-pressed="${u.showDesc !== false}" data-pact="showdesc" type="button" title="האם להציג את התיאור ליד השם">${u.showDesc !== false ? 'שם ותיאור' : 'רק שם'}</button></div>
       ${paletteFor===u.id ? `<div class="palette">${PALETTE.map(c => `<button class="swatch" style="--c:${c}" aria-pressed="${c===u.color}" data-pact="color" data-c="${c}" aria-label="צבע" type="button"></button>`).join('')}</div>` : ''}
     </div></li>`).join('') : '<li class="hint" style="margin:0">עוד אין אנשים. הוסיפו את עצמכם ראשונים.</li>';
 }
@@ -1824,6 +1936,7 @@ $('#plist').addEventListener('click', e => {
   if (act === 'palette') { paletteFor = paletteFor === uid ? null : uid; renderPeople(); }
   else if (act === 'color') { U[uid] = {...U[uid], color:b.dataset.c}; write(B.update('users', uid, {color:b.dataset.c})); paletteFor = null; renderPeople(); render(); }
   else if (act === 'me') { me = me === uid ? '' : uid; GL.set('me', me); renderPeople(); render(); }
+  else if (act === 'showdesc') { const v = U[uid].showDesc === false; U[uid] = {...U[uid], showDesc:v}; write(B.update('users', uid, {showDesc:v})); renderPeople(); render(); }
   else if (act === 'del') {
     const backup = {...U[uid]}; delete U[uid]; write(B.del('users', uid));
     if (me === uid) { me = ''; GL.set('me', ''); }
@@ -1832,7 +1945,9 @@ $('#plist').addEventListener('click', e => {
   }
 });
 $('#plist').addEventListener('change', e => {
-  const el = e.target; if (el.dataset.pact !== 'name') return;
+  const el = e.target;
+  if (el.dataset.pact === 'desc') { const uid = el.closest('li[data-u]').dataset.u, v = el.value.trim(); if (U[uid] && (U[uid].desc || '') !== v) { U[uid] = {...U[uid], desc:v}; write(B.update('users', uid, {desc:v})); render(); } return; }
+  if (el.dataset.pact !== 'name') return;
   const uid = el.closest('li[data-u]').dataset.u; const v = el.value.trim();
   if (v && U[uid] && v !== U[uid].name) { U[uid] = {...U[uid], name:v}; write(B.update('users', uid, {name:v})); render(); }
 });
