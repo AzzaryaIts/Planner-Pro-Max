@@ -335,6 +335,66 @@ dialog.sheet{max-height:min(88vh,760px);overflow:auto}
   .s-results{max-height:60vh}
   .toast{bottom:calc(12px + env(safe-area-inset-bottom,0px))}
 }
+
+/* note preview under a task */
+.dnote{margin:-2px 0 6px;margin-inline-start:76px;font-size:.86rem;line-height:1.45;color:var(--muted);white-space:pre-wrap;overflow-wrap:anywhere;cursor:pointer;max-width:62ch}
+.dnote:hover{color:var(--ink)}
+.flist .dnote,.assigned .dnote{margin-inline-start:34px}
+/* "move forward with" tags */
+#tree,#urgent,#assigned{position:relative}
+.vtags{display:inline-flex;gap:4px;flex:none;align-items:center;min-width:0}
+.vtags:empty{display:none}
+.vtag{display:inline-flex;align-items:center;gap:5px;border:0;border-radius:999px;padding:2px 10px 2px 9px;font-size:.8rem;font-weight:700;white-space:nowrap;max-width:190px;overflow:hidden;text-overflow:ellipsis;
+  background:color-mix(in srgb,var(--c,var(--muted)) 16%,var(--surface));color:var(--ink);box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--c,var(--muted)) 55%,transparent)}
+.vtag .vdot{width:9px;height:9px;border-radius:50%;background:var(--c);flex:none}
+.vtag.wait{--c:var(--warn);background:var(--warn-soft);color:var(--warn)}
+.vtag.wait span{overflow:hidden;text-overflow:ellipsis}
+.vtag.agg{background:transparent;box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--c,var(--muted)) 50%,transparent);border:0;font-weight:600;color:var(--muted)}
+.vtag.wait.agg{color:var(--warn)}
+@media (min-width:1220px){
+  body[data-mode="tree"] .vtags, body[data-mode="list"] .vtags, body[data-mode="urgent"] .vtags, body[data-mode="agenda"] .vtags{position:absolute;left:calc(100% + 14px);flex-direction:column;align-items:flex-start;gap:3px}
+}
+.stpanel .chip svg{flex:none}
+.win{flex:1;min-width:200px;font:inherit;font-size:.92rem;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 10px;outline:none}
+.win:focus{border-color:var(--accent)}
+.agenda-head{display:flex;align-items:center;gap:8px}
+.agenda-head .dot{width:13px;height:13px}
+#kinds .seg{font-size:.85rem;padding:4px 10px}
+/* table view */
+.tablewrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:14px}
+.ttable{width:100%;min-width:760px;border-collapse:collapse;font-size:.95rem}
+.ttable th{text-align:start;font-size:.76rem;font-weight:800;letter-spacing:.03em;color:var(--muted);padding:9px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+.ttable td{padding:3px 6px;border-bottom:1px solid var(--line);vertical-align:middle}
+.ttable tr:last-child td{border-bottom:0}
+.ttable tr.top > td{background:color-mix(in srgb,var(--accent-soft) 45%,transparent)}
+.ttable tr.top .text{font-weight:700}
+.ttable tr:not(.tpanel):hover > td{background:var(--accent-soft)}
+.ttable tr.done .text{text-decoration:line-through;color:var(--muted)}
+.ttable tr.ctx{opacity:.55}
+.ttable .c-check{width:34px;text-align:center}
+.ttable .c-name{min-width:260px}
+.tname{display:flex;align-items:center;gap:4px;padding-inline-start:calc(var(--d) * 22px)}
+.ttable .dnote{margin:0 0 4px;margin-inline-start:calc(var(--d,0) * 22px + 30px)}
+.tcell{border:0;background:none;padding:4px 6px;border-radius:7px;display:inline-flex;align-items:center;gap:5px;white-space:nowrap;font-size:.9rem;min-height:30px}
+.tcell:hover{background:var(--surface)}
+.tcell.icon{opacity:1;width:auto}
+.dash{color:var(--muted);opacity:.6;font-size:.88rem}
+.ttable .c-acts{white-space:nowrap;width:1%}
+.ttable .c-acts .icon{opacity:.35;display:inline-grid;vertical-align:middle}
+.ttable tr:hover .c-acts .icon,.ttable .c-acts .icon.has{opacity:1}
+.ttable .vtags{flex-wrap:wrap}
+.tpanel > td{background:var(--bg)}
+.tpanel .assign,.tpanel .desc{margin-inline-start:0}
+@media (max-width:640px){
+  .dnote{margin-inline-start:34px}
+  .vtags{order:7;flex-basis:100%;padding-inline-start:60px;flex-wrap:wrap}
+  .row:has(> .vtags){flex-wrap:wrap}
+  #modes{overflow-x:auto;min-width:0;max-width:100%;scrollbar-width:none}
+  .viewbar,.tools{min-width:0;max-width:100%}
+  #modes .seg{flex:0 0 auto;padding:8px 10px}
+  #kinds{overflow-x:auto;max-width:100%}
+  .ttable .c-acts .icon{opacity:1}
+}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 #help{--soft:var(--accent-soft);--key:var(--surface);--key-edge:var(--line);--p1:var(--accent);--p2:#3B6FB6;--font-key:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;width:min(860px,calc(100% - 24px));padding:0}
 #help .help-head{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--surface);border-bottom:1px solid var(--line);padding:14px 20px}
@@ -432,9 +492,10 @@ dialog.sheet{max-height:min(88vh,760px);overflow:auto}
     </div>
   </header>
   <div class="viewbar"><nav class="views" id="views" aria-label="של מי"></nav>
-    <div class="modes" id="modes" role="group" aria-label="סוג תצוגה"><button class="seg" data-mode="tree" type="button">עץ</button><button class="seg" data-mode="list" type="button">רשימה</button><button class="seg" data-mode="urgent" type="button">דחיפות</button><button class="seg" data-mode="archive" type="button">ארכיון</button><button class="seg" data-mode="trash" type="button">פח<span id="trash-count"></span></button></div></div>
+    <div class="modes" id="modes" role="group" aria-label="סוג תצוגה"><button class="seg" data-mode="tree" type="button">עץ</button><button class="seg" data-mode="table" type="button">טבלה</button><button class="seg" data-mode="list" type="button">רשימה</button><button class="seg" data-mode="urgent" type="button">דחיפות</button><button class="seg" data-mode="agenda" type="button">קידום</button><button class="seg" data-mode="archive" type="button">ארכיון</button><button class="seg" data-mode="trash" type="button">פח<span id="trash-count"></span></button></div></div>
   <div class="tools">
     <div class="levels-wrap" id="levels-wrap"><span class="tlabel">פתיחה עד רמה:</span><div class="modes" id="levels" role="group" aria-label="פתיחה עד רמה"><button class="seg" data-level="1" type="button">1</button><button class="seg" data-level="2" type="button">2</button><button class="seg" data-level="3" type="button">3</button><button class="seg" data-level="all" type="button">הכל</button></div></div>
+    <div class="modes" id="kinds" role="group" aria-label="סוג משימה"><button class="seg" data-kind="all" type="button">כל הסוגים</button><button class="seg" data-kind="self" type="button">בעצמי</button><button class="seg" data-kind="person" type="button">מול אנשים</button><button class="seg" data-kind="wait" type="button">ממתין</button></div>
     <button class="chip imp" id="btn-imp" aria-pressed="false" type="button"><svg width="14" height="14" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4.5 15.5V3M4.5 3.5h8.5l-2 3 2 3H4.5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>רק חשובות</button>
   </div>
   <div class="rootadd" id="rootadd"><input id="root-input" placeholder="משימה ראשית חדשה, ואז Enter" autocomplete="off" aria-label="משימה ראשית חדשה" enterkeyhint="done"></div>
@@ -633,6 +694,7 @@ const ICON = {
   person:'<svg width="17" height="17" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="6" r="3" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 15.5c.8-3 3-4.5 5.5-4.5s4.7 1.5 5.5 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
   cal:'<svg width="17" height="17" viewBox="0 0 18 18" fill="none"><rect x="2.8" y="3.8" width="12.4" height="11.4" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M2.8 7.5h12.4M6 2.5v2.6M12 2.5v2.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
   flag:'<svg width="17" height="17" viewBox="0 0 18 18" fill="none"><path d="M4.5 15.5V3M4.5 3.5h8.5l-2 3 2 3H4.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  flow:'<svg width="17" height="17" viewBox="0 0 18 18" fill="none"><path d="M3 6h10.5M11 3.5L13.5 6 11 8.5M15 12H4.5M7 9.5L4.5 12 7 14.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   trash:'<svg width="17" height="17" viewBox="0 0 18 18" fill="none"><path d="M3.5 5h11M7 5V3.5h4V5M5 5l.8 9.5h6.4L13 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>'
 };
 const $ = s => document.querySelector(s);
@@ -687,17 +749,39 @@ try { B = (FIREBASE_CONFIG && window.firebase) ? cloudBackend() : localBackend()
 catch(e){ console.error(e); B = localBackend(); }
 const write = p => Promise.resolve(p).catch(e => { console.error(e); toast('השמירה לא הצליחה. בדקו את החיבור ונסו שוב.'); });
 
+
+/* ---------- local edits overlay ----------
+   The cloud store answers each write a moment later and sometimes sends an update
+   that does not include the newest write yet. Until a write comes back, keep it on screen. */
+const localEdits = new Map();   // id -> {doc?, fields, del, at}
+function trackCreate(id, d){ localEdits.set(id, {doc:{...d}, fields:{}, del:false, at:Date.now()}); }
+function trackPatch(id, f){ const e = localEdits.get(id) || {fields:{}, del:false}; e.fields = {...e.fields, ...f}; e.at = Date.now(); localEdits.set(id, e); }
+function trackDelete(id){ localEdits.set(id, {fields:{}, del:true, at:Date.now()}); }
+function applyLocalEdits(m){
+  const now = Date.now();
+  for (const [id, e] of localEdits) {
+    if (now - e.at > 15000) { localEdits.delete(id); continue; }
+    if (e.del) { if (id in m) delete m[id]; else localEdits.delete(id); continue; }
+    if (!(id in m)) { if (e.doc) m[id] = {...e.doc, ...e.fields}; continue; }
+    const same = Object.entries(e.fields).every(([k, v]) => JSON.stringify(m[id][k]) === JSON.stringify(v));
+    if (same) localEdits.delete(id); else m[id] = {...m[id], ...e.fields};
+  }
+  return m;
+}
+
 /* ---------- state ---------- */
 let T = {}, TD = {}, U = {}, C = {}, loaded = {tasks:false, users:false};
 let me = GL.get('me', ''), view = GL.get('view', 'all');
 const collapsed = new Set(GL.get('collapsed', [])), openDesc = new Set(GL.get('openDesc', []));
 let hideDone = GL.get('hideDone', false), mode = GL.get('mode', 'tree');
-if (!['tree','list','urgent','archive','trash'].includes(mode)) mode = 'tree';
+if (!['tree','table','list','urgent','agenda','archive','trash'].includes(mode)) mode = 'tree';
+let kindF = GL.get('kindF', 'all'), agendaFor = GL.get('agendaFor', 'all');
+if (!['all','self','person','wait'].includes(kindF)) kindF = 'all';
 let onlyImp = GL.get('onlyImp', false), archDays = GL.get('archDays', 7), confirmKey = null, confirmTimer = null;
 let cMap = new Map();
 const isArchived = t => !!(t && archDays > 0 && t.done && t.doneAt && Date.now() - t.doneAt > archDays * 864e5);
 const commentsOf = id => cMap.get(id) || [];
-let dueFor = null, assignFor = null, dragging = false, pendingRender = false, rendering = false, focusReq = null, paletteFor = null;
+let stFor = null, dueFor = null, assignFor = null, dragging = false, pendingRender = false, rendering = false, focusReq = null, paletteFor = null;
 const drafts = {}, timers = {};
 let kidsMap = new Map();
 
@@ -727,8 +811,8 @@ const usersSorted = () => Object.entries(U).map(([id,u]) => ({...u, id})).sort((
 
 /* ---------- rendering ---------- */
 function visibleSet(X){
-  if (!X && !onlyImp) return null;
-  const match = c => (!X || c.owner === X) && (sticky.has(c.id) || !onlyImp || (c.prio||0) > 0);
+  if (!X && !onlyImp && kindF === 'all') return null;
+  const match = c => (!X || c.owner === X) && (sticky.has(c.id) || ((!onlyImp || (c.prio||0) > 0) && kindOk(c)));
   const vis = new Set(); vis.match = match;
   (function w(p){ let any=false; for (const c of kids(p)) { if (isArchived(c)) continue; const sub = w(c.id); if (match(c) || sub) { vis.add(c.id); any=true; } } return any; })('');
   return vis;
@@ -761,7 +845,8 @@ function rowHTML(t, depth, opts){
       <div class="text" contenteditable="plaintext-only" spellcheck="false" enterkeyhint="enter" data-id="${t.id}" ${opts.enterBlur?'data-flat="1"':''} role="textbox" aria-label="שם המשימה">${esc(drafts[t.id] ?? t.text)}</div>
       ${opts.inlinePath ? `<span class="ipath" title="${opts.inlinePath}">${opts.inlinePath}</span>` : ''}
       <span class="dots" data-act="people">${dots}</span>
-      ${due ? `<button class="due ${t.done?'':due.cls}" data-act="due" title="דדליין: ${due.full}${t.repeat ? ' · חוזרת' : ''}" type="button">${due.label}${t.repeat ? ' ↻' : ''}</button>` : ''}
+      ${tagsHTML(t, opts)}
+      ${due ? `<button class="due ${t.done?'':due.cls}" data-act="due" title="דדליין: ${due.full}${t.repeat ? ' · חוזרת' : ''}" type="button">${t.done ? due.full.replace(/\.\d{4}$/, '') : due.label}${t.repeat ? ' ↻' : ''}</button>` : ''}
       ${total ? `<span class="count" title="בוצעו מתוך הכל">${doneCount}/${total}</span>` : ''}
       <div class="acts">
       ${opts.flat || opts.noDrag ? '' : `<button class="icon mob" data-act="outdent" title="רמה אחת למעלה" aria-label="רמה אחת למעלה" type="button"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3.5 4.5v9M7 9h7.5M11.5 6l3 3-3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="icon mob" data-act="indent" title="להפוך לתת-משימה של זו שמעליה" aria-label="להפוך לתת-משימה" type="button"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M14.5 4.5v9M11 9H3.5M6.5 6L3.5 9l3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>`}
@@ -769,21 +854,16 @@ function rowHTML(t, depth, opts){
       ${due ? '' : `<button class="icon ${dueFor===t.id?'open':''}" data-act="due" title="דדליין" aria-label="דדליין" type="button">${ICON.cal}</button>`}
       <button class="icon note ${t.desc||nc?'has':''} ${openDesc.has(t.id)?'open':''}" data-act="desc" title="תיאור ותגובות" aria-label="תיאור ותגובות" type="button">${ICON.note}${nc ? `<span class="ncount">${nc}</span>` : ''}</button>
       <button class="icon ${assignFor===t.id?'open':''}" data-act="people" title="שיוך לאנשים" aria-label="שיוך לאנשים" type="button">${ICON.person}</button>
+      <button class="icon ${kindOf(t)!=='self'?'has':''} ${stFor===t.id?'open':''}" data-act="status" title="כדי לקדם: בעצמי, מול אדם או ממתין" aria-label="כדי לקדם" type="button">${ICON.flow}</button>
       ${opts.flat ? '' : `<button class="icon" data-act="add" title="הוספת תת-משימה" aria-label="הוספת תת-משימה" type="button">${ICON.plus}</button>`}
       <button class="icon del" data-act="del" title="מחיקה" aria-label="מחיקה" type="button">${ICON.trash}</button>
       </div>
     </div>`;
   if (opts.path) h += `<div class="path">${opts.path}</div>`;
-  if (assignFor === t.id) h += assignHTML(t);
-  if (dueFor === t.id) h += dueHTML(t);
-  if (openDesc.has(t.id)) {
-    const cs = commentsOf(t.id);
-    h += `<div class="desc"><textarea data-desc="${t.id}" id="desc-${t.id}" rows="1" placeholder="תיאור חופשי, הערות, קישורים…">${esc(drafts['d:'+t.id] ?? t.desc ?? '')}</textarea>
-      ${cs.length ? `<ul class="comments">${cs.map(c => `<li><span class="dot" style="--c:${userColor(c.by)};width:8px;height:8px"></span><span class="c-who">${esc(c.by && U[c.by] ? U[c.by].name : 'מישהו')}</span><span class="c-when">${whenLabel(c.at||0)}</span><span class="c-text">${esc(c.text)}</span><button class="c-del" data-act="del-comment" data-cid="${c.id}" title="מחיקת תגובה" aria-label="מחיקת תגובה" type="button">×</button></li>`).join('')}</ul>` : ''}
-      <input class="cin" data-cfor="${t.id}" id="cin-${t.id}" placeholder="תגובה, ואז Enter" autocomplete="off" enterkeyhint="send" aria-label="תגובה חדשה"></div>`;
-  }
+  h += descNote(t);
+  h += panelsHTML(t);
   if (!opts.flat) {
-    const sub = {vis:opts.vis, X:opts.X, noDrag:opts.noDrag};
+    const sub = {vis:opts.vis, X:opts.X, noDrag:opts.noDrag, noTags:opts.noTags};
     const inner = open ? show.map(k => rowHTML(k, depth+1, sub)).join('') : '';
     h += `<ul class="kids ${opts.noDrag?'':'sortable'}" data-parent="${t.id}">${inner}</ul>`;
   }
@@ -807,7 +887,7 @@ function dueInfo(due){
 }
 function renderList(X){
   const mine = t => !X || t.owner === X || (t.assignees||[]).includes(X) || ancestors(t.id).some(a => (T[a].assignees||[]).includes(X));
-  const ok = t => mine(t) && (sticky.has(t.id) || !onlyImp || (t.prio||0) > 0);
+  const ok = t => mine(t) && (sticky.has(t.id) || ((!onlyImp || (t.prio||0) > 0) && kindOk(t)));
   const open = [], done = [];
   (function w(p){ for (const c of kids(p)) { if (isArchived(c)) continue; if (ok(c)) (c.done ? done : open).push(c); w(c.id); } })('');
   done.sort((a,b) => (b.doneAt||0) - (a.doneAt||0));
@@ -823,7 +903,7 @@ function renderList(X){
 }
 function renderUrgent(X){
   const rel = t => !X || t.owner === X || (t.assignees||[]).includes(X) || ancestors(t.id).some(a => (T[a].assignees||[]).includes(X));
-  const items = Object.keys(T).map(task).filter(t => !t.done && t.due && dueInfo(t.due) && rel(t) && (!onlyImp || (t.prio||0) > 0))
+  const items = Object.keys(T).map(task).filter(t => !t.done && t.due && dueInfo(t.due) && rel(t) && (!onlyImp || (t.prio||0) > 0) && kindOk(t))
     .sort((a,b) => a.due < b.due ? -1 : a.due > b.due ? 1 : ((b.prio||0)-(a.prio||0)) || (a.order||0)-(b.order||0));
   const noDue = Object.keys(T).map(task).filter(t => !t.done && !t.due && rel(t)).length;
   const groups = [['באיחור', n => n < 0], ['היום', n => n === 0], ['מחר', n => n === 1], ['בשבוע הקרוב', n => n > 1 && n < 7], ['בהמשך', n => n >= 7]];
@@ -837,6 +917,121 @@ function renderUrgent(X){
   }
   if (!h) h = `<li class="empty"><strong>אין משימות עם דדליין</strong>כדי לקבוע דדליין, לחצו על סמל לוח השנה בשורה של משימה.</li>`;
   else if (noDue) h += `<li class="hint">ועוד ${noDue} משימות פתוחות בלי דדליין.</li>`;
+  $('#urgent').innerHTML = h;
+}
+
+
+/* ---------- how a task moves forward: by me, with a person, or waiting ---------- */
+const kindOf = t => t && t.status === 'person' && U[t.via] ? 'person' : t && t.status === 'wait' ? 'wait' : 'self';
+const kindOk = t => kindF === 'all' || kindOf(t) === kindF;
+const I_WAIT = '<svg width="12" height="12" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M5 2.5h8M5 15.5h8M6 2.5c0 4 6 4.5 6 6.5s-6 2.5-6 6.5M12 2.5c0 4-6 4.5-6 6.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
+function ownTag(t){
+  if (t.done) return '';
+  const k = kindOf(t);
+  if (k === 'person') return `<button class="vtag" style="--c:${userColor(t.via)}" data-act="status" title="מחכה לקידום מול ${esc(userName(t.via))}" type="button"><i class="vdot"></i>מול ${esc(userName(t.via))}</button>`;
+  if (k === 'wait') return `<button class="vtag wait" data-act="status" title="ממתינה${t.waitFor ? ': ' + esc(t.waitFor) : ''}" type="button">${I_WAIT}<span>${t.waitFor ? 'ממתין: ' + esc(t.waitFor) : 'ממתין'}</span></button>`;
+  return '';
+}
+function aggTags(id){
+  const people = new Map(); let waiting = 0;
+  for (const d of descendants(id)) {
+    const t = T[d]; if (!t || t.done || isArchived(t)) continue;
+    const k = kindOf(t);
+    if (k === 'person') people.set(t.via, (people.get(t.via) || 0) + 1); else if (k === 'wait') waiting++;
+  }
+  let h = '';
+  for (const [u, n] of people) h += `<span class="vtag agg" style="--c:${userColor(u)}" title="בתוכה ${n === 1 ? 'משימה אחת' : n + ' משימות'} לקידום מול ${esc(userName(u))}"><i class="vdot"></i>בפנים: מול ${esc(userName(u))}${n > 1 ? ' ×' + n : ''}</span>`;
+  if (waiting) h += `<span class="vtag wait agg">${I_WAIT}<span>בפנים: ${waiting === 1 ? 'ממתינה אחת' : waiting + ' ממתינות'}</span></span>`;
+  return h;
+}
+function tagsHTML(t, opts){
+  if (opts && opts.noTags) return '';
+  const collapsedParent = collapsed.has(t.id) && kids(t.id).length && !(opts && opts.flat);
+  const h = ownTag(t) + (collapsedParent ? aggTags(t.id) : '');
+  return h ? `<span class="vtags">${h}</span>` : '';
+}
+function stHTML(t){
+  const k = kindOf(t), us = usersSorted();
+  const people = us.map(u => `<button class="chip" style="--c:${u.color}" aria-pressed="${k==='person' && t.via===u.id}" data-act="set-status" data-s="person" data-u="${u.id}" type="button"><span class="dot"></span>מול ${esc(u.name)}</button>`).join('');
+  return `<div class="assign stpanel"><div class="line">כדי לקדם: <button class="chip" aria-pressed="${k==='self'}" data-act="set-status" data-s="self" type="button">בעצמי</button>${people || '<button class="chip" data-act="open-people" type="button">+ הוספת אנשים</button>'}<button class="chip" aria-pressed="${k==='wait'}" data-act="set-status" data-s="wait" type="button">${I_WAIT} ממתין</button></div>
+    ${k === 'wait' ? `<div class="line"><input class="win" data-wfor="${t.id}" id="win-${t.id}" value="${esc(drafts['w:'+t.id] ?? t.waitFor ?? '')}" placeholder="למה היא ממתינה? למשל: תשובה מהמרצה (לא חובה)" autocomplete="off" enterkeyhint="done" aria-label="למה היא ממתינה"></div>` : ''}</div>`;
+}
+function descNote(t){
+  return (!openDesc.has(t.id) && t.desc) ? `<div class="dnote" data-act="desc" title="לחיצה לעריכה">${esc(t.desc)}</div>` : '';
+}
+function panelsHTML(t){
+  let h = '';
+  if (assignFor === t.id) h += assignHTML(t);
+  if (stFor === t.id) h += stHTML(t);
+  if (dueFor === t.id) h += dueHTML(t);
+  if (openDesc.has(t.id)) {
+    const cs = commentsOf(t.id);
+    h += `<div class="desc"><textarea data-desc="${t.id}" id="desc-${t.id}" rows="1" placeholder="תיאור חופשי, הערות, קישורים… (Enter לסיום, Shift+Enter לשורה חדשה)">${esc(drafts['d:'+t.id] ?? t.desc ?? '')}</textarea>
+      ${cs.length ? `<ul class="comments">${cs.map(c => `<li><span class="dot" style="--c:${userColor(c.by)};width:8px;height:8px"></span><span class="c-who">${esc(c.by && U[c.by] ? U[c.by].name : 'מישהו')}</span><span class="c-when">${whenLabel(c.at||0)}</span><span class="c-text">${esc(c.text)}</span><button class="c-del" data-act="del-comment" data-cid="${c.id}" title="מחיקת תגובה" aria-label="מחיקת תגובה" type="button">×</button></li>`).join('')}</ul>` : ''}
+      <input class="cin" data-cfor="${t.id}" id="cin-${t.id}" placeholder="תגובה, ואז Enter" autocomplete="off" enterkeyhint="send" aria-label="תגובה חדשה"></div>`;
+  }
+  return h;
+}
+
+/* ---------- table view ---------- */
+function renderTable(X, vis, roots){
+  const rows = [];
+  const walk = (t, depth) => {
+    const all = kids(t.id);
+    let show = all;
+    if (vis) show = show.filter(k => vis.has(k.id));
+    if (hideDone) show = show.filter(k => !k.done);
+    show = show.filter(k => !isArchived(k));
+    const open = !collapsed.has(t.id), total = all.length, doneCount = all.filter(k => k.done).length;
+    const ctx = vis && !vis.match(t);
+    const due = t.due ? dueInfo(t.due) : null, prio = t.prio || 0, nc = commentsOf(t.id).length;
+    const owner = t.owner && U[t.owner] ? `<span class="dot" style="--c:${userColor(t.owner)}"></span>${esc(userName(t.owner))}` : '<span class="dash">—</span>';
+    const also = (t.assignees||[]).filter(a => U[a] && a !== t.owner).map(a => `<span class="dot ring" style="--c:${userColor(a)}" title="גם: ${esc(userName(a))}"></span>`).join('');
+    const tags = ownTag(t) + (!open && total ? aggTags(t.id) : '');
+    rows.push(`<tr class="${t.done ? 'done' : ''} ${ctx ? 'ctx' : ''} ${depth === 0 ? 'top' : ''}" data-id="${t.id}">
+      <td class="c-check"><button class="check" role="checkbox" aria-checked="${!!t.done}" data-act="toggle" aria-label="בוצעה" type="button">${t.done ? ICON.check : ''}</button></td>
+      <td class="c-name"><div class="tname" style="--d:${depth}">
+        <button class="caret ${total ? '' : 'blank'}" data-act="collapse" aria-expanded="${open}" aria-label="${open ? 'כיווץ' : 'פתיחה'}" type="button">${ICON.caret}</button>
+        <div class="text" contenteditable="plaintext-only" spellcheck="false" enterkeyhint="enter" data-id="${t.id}" role="textbox" aria-label="שם המשימה">${esc(drafts[t.id] ?? t.text)}</div>
+        ${total ? `<span class="count">${doneCount}/${total}</span>` : ''}</div>${descNote(t)}</td>
+      <td><button class="tcell" data-act="status" type="button">${tags ? `<span class="vtags">${tags}</span>` : '<span class="dash">בעצמי</span>'}</button></td>
+      <td><button class="tcell" data-act="people" type="button">${owner}${also}</button></td>
+      <td><button class="tcell" data-act="due" type="button">${due ? `<span class="due ${t.done ? '' : due.cls}">${t.done ? due.full.replace(/\.\d{4}$/, '') : due.label}${t.repeat ? ' ↻' : ''}</span>` : '<span class="dash">—</span>'}</button></td>
+      <td><button class="tcell icon flag ${prio ? 'has p' + prio : ''}" data-act="prio" title="חשיבות" type="button">${prio ? ICON.flag : '<span class="dash">—</span>'}</button></td>
+      <td class="c-acts"><button class="icon note ${t.desc || nc ? 'has' : ''}" data-act="desc" title="תיאור ותגובות" aria-label="תיאור ותגובות" type="button">${ICON.note}${nc ? `<span class="ncount">${nc}</span>` : ''}</button><button class="icon" data-act="add" title="הוספת תת-משימה" aria-label="הוספת תת-משימה" type="button">${ICON.plus}</button><button class="icon del" data-act="del" title="מחיקה" aria-label="מחיקה" type="button">${ICON.trash}</button></td>
+    </tr>`);
+    const panels = panelsHTML(t);
+    if (panels) rows.push(`<tr class="tpanel" data-id="${t.id}"><td></td><td colspan="6">${panels}</td></tr>`);
+    if (open) show.forEach(k => walk(k, depth + 1));
+  };
+  roots.forEach(r => walk(r, 0));
+  if (!roots.length) { $('#urgent').innerHTML = `<li class="empty"><strong>אין כאן משימות</strong>כתבו משימה ראשית בשורה למעלה ולחצו Enter.</li>`; return; }
+  $('#urgent').innerHTML = `<li><div class="tablewrap"><table class="ttable"><thead><tr><th class="c-check"></th><th>משימה</th><th>כדי לקדם</th><th>של מי</th><th>דדליין</th><th>חשיבות</th><th></th></tr></thead><tbody>${rows.join('')}</tbody></table></div></li>`;
+}
+
+/* ---------- things to move forward with people ---------- */
+function renderAgenda(X){
+  const rel = relFor(X);
+  const open = Object.keys(T).map(task).filter(t => !t.done && !isArchived(t) && rel(t));
+  const byVia = new Map();
+  open.filter(t => kindOf(t) === 'person').forEach(t => { if (!byVia.has(t.via)) byVia.set(t.via, []); byVia.get(t.via).push(t); });
+  const waiting = open.filter(t => kindOf(t) === 'wait');
+  const us = usersSorted().filter(u => byVia.has(u.id));
+  if (agendaFor !== 'all' && agendaFor !== 'wait' && !byVia.has(agendaFor)) agendaFor = 'all';
+  const sortT = list => list.sort((a,b) => ((b.prio||0)-(a.prio||0)) || ((a.due||'9') < (b.due||'9') ? -1 : (a.due||'9') > (b.due||'9') ? 1 : 0) || (a.order||0)-(b.order||0));
+  let h = `<li class="arch-head"><button class="chip" data-agenda="all" aria-pressed="${agendaFor==='all'}" type="button">כולם</button>${us.map(u => `<button class="chip" style="--c:${u.color}" data-agenda="${u.id}" aria-pressed="${agendaFor===u.id}" type="button"><span class="dot"></span>${esc(u.name)} <span class="ucount">${byVia.get(u.id).length}</span></button>`).join('')}${waiting.length ? `<button class="chip" data-agenda="wait" aria-pressed="${agendaFor==='wait'}" type="button">${I_WAIT} ממתינות <span class="ucount">${waiting.length}</span></button>` : ''}</li>`;
+  const row = (t, noTags) => rowHTML(t, 0, {flat:true, noDrag:true, enterBlur:true, noTags, path: pathLine(t)});
+  let any = false;
+  for (const u of us) {
+    if (agendaFor !== 'all' && agendaFor !== u.id) continue;
+    any = true;
+    h += `<li class="ugroup"><h2 class="section-title agenda-head" style="--c:${u.color}"><span class="dot"></span>מול ${esc(u.name)} <span class="ucount">${byVia.get(u.id).length}</span></h2><ul class="assigned">${sortT(byVia.get(u.id)).map(t => row(t, true)).join('')}</ul></li>`;
+  }
+  if (waiting.length && (agendaFor === 'all' || agendaFor === 'wait')) {
+    any = true;
+    h += `<li class="ugroup"><h2 class="section-title">ממתינות <span class="ucount">${waiting.length}</span></h2><ul class="assigned">${sortT(waiting).map(t => row(t, false)).join('')}</ul></li>`;
+  }
+  if (!any) h = `<li class="empty"><strong>אין משימות שמחכות לאחרים</strong>כדי לסמן משימה כמחכה לקידום מול אדם, או כממתינה למשהו, לוחצים על כפתור "כדי לקדם" בשורה שלה.</li>`;
   $('#urgent').innerHTML = h;
 }
 
@@ -910,6 +1105,7 @@ function captureFocus(){
   if (a.classList && a.classList.contains('text')) return {kind:'text', id:a.dataset.id, caret:getCaret(a), value:a.textContent};
   if (a.dataset && a.dataset.desc) return {kind:'desc', id:a.dataset.desc, s:a.selectionStart, e:a.selectionEnd, value:a.value};
   if (a.classList && a.classList.contains('cin')) return {kind:'cin', id:a.dataset.cfor, value:a.value};
+  if (a.classList && a.classList.contains('win')) return {kind:'win', id:a.dataset.wfor, value:a.value, s:a.selectionStart};
   return null;
 }
 function restoreFocus(f){
@@ -921,6 +1117,9 @@ function restoreFocus(f){
   if (f.kind === 'text') {
     const el = document.querySelector(`.text[data-id="${f.id}"]`);
     if (el) { if (el.textContent !== f.value) el.textContent = f.value; setCaret(el, f.caret); }
+  } else if (f.kind === 'win') {
+    const el = document.getElementById('win-' + f.id);
+    if (el) { el.value = f.value; el.focus(); try { el.setSelectionRange(f.s, f.s); } catch(e){} }
   } else if (f.kind === 'cin') {
     const el = document.getElementById('cin-' + f.id);
     if (el) { el.value = f.value; el.focus(); }
@@ -947,26 +1146,29 @@ function render(){
   roots = roots.filter(r => !isArchived(r));
   $('#root-input').placeholder = X ? `משימה ראשית חדשה של ${U[X] ? U[X].name : ''}, ואז Enter` : 'משימה ראשית חדשה, ואז Enter';
   const alt = mode !== 'tree';
-  $('#tree').hidden = alt; $('#rootadd').hidden = alt; $('#urgent').hidden = !alt; $('#btn-hide').hidden = alt && mode !== 'list';
-  $('#levels-wrap').hidden = mode !== 'tree'; $('#btn-imp').hidden = mode === 'archive' || mode === 'trash';
+  const treeish = mode === 'tree' || mode === 'table';
+  $('#tree').hidden = alt; $('#rootadd').hidden = !treeish; $('#urgent').hidden = !alt; $('#btn-hide').hidden = !(treeish || mode === 'list');
+  $('#levels-wrap').hidden = !treeish; $('#btn-imp').hidden = mode === 'archive' || mode === 'trash' || mode === 'agenda';
+  $('#kinds').hidden = mode === 'archive' || mode === 'trash' || mode === 'agenda';
+  document.querySelectorAll('#kinds [data-kind]').forEach(b => b.setAttribute('aria-pressed', b.dataset.kind === kindF));
   document.body.dataset.mode = mode;
   $('#btn-imp').setAttribute('aria-pressed', onlyImp);
   const nTrash = trashGroups().length;
   $('#trash-count').textContent = nTrash ? ` ${nTrash}` : '';
   document.querySelectorAll('#modes [data-mode]').forEach(b => b.setAttribute('aria-pressed', b.dataset.mode === mode));
-  if (alt && loaded.tasks) { if (mode === 'list') renderList(X); else if (mode === 'urgent') renderUrgent(X); else if (mode === 'archive') renderArchive(X); else renderTrash(); }
+  if (alt && loaded.tasks) { if (mode === 'table') renderTable(X, vis, roots); else if (mode === 'agenda') renderAgenda(X); else if (mode === 'list') renderList(X); else if (mode === 'urgent') renderUrgent(X); else if (mode === 'archive') renderArchive(X); else renderTrash(); }
   const tree = $('#tree');
   if (alt) tree.innerHTML = '';
   else if (!loaded.tasks) tree.innerHTML = '';
   else if (!nTasks) tree.innerHTML = `<li class="empty"><strong>הרשימה ריקה</strong>כתבו משימה ראשית בשורה למעלה ולחצו Enter. בתוך משימה, Enter יוצר משימה חדשה ו-Tab הופך אותה לתת-משימה.</li>`;
-  else if (!roots.length) tree.innerHTML = `<li class="empty"><strong>אין כאן משימות</strong>${onlyImp ? 'אין משימות שסומנו כחשובות.' : X ? 'אין משימות ששייכות לאדם הזה.' : 'כל המשימות מוסתרות.'}</li>`;
+  else if (!roots.length) tree.innerHTML = `<li class="empty"><strong>אין כאן משימות</strong>${kindF !== 'all' ? 'אין משימות מהסוג שנבחר.' : onlyImp ? 'אין משימות שסומנו כחשובות.' : X ? 'אין משימות ששייכות לאדם הזה.' : 'כל המשימות מוסתרות.'}</li>`;
   else tree.innerHTML = roots.map(r => rowHTML(r, 0, {vis, X})).join('');
 
   // assigned to X by others
   const wrap = $('#assigned-wrap');
   if (X && !alt) {
     const isAssigned = id => (T[id].assignees||[]).includes(X) && T[id].owner !== X;
-    const items = Object.keys(T).map(task).filter(t => isAssigned(t.id) && !(vis && vis.has(t.id)) && !(hideDone && t.done) && !isArchived(t) && (sticky.has(t.id) || !onlyImp || (t.prio||0) > 0)
+    const items = Object.keys(T).map(task).filter(t => isAssigned(t.id) && !(vis && vis.has(t.id)) && !(hideDone && t.done) && !isArchived(t) && (sticky.has(t.id) || ((!onlyImp || (t.prio||0) > 0) && kindOk(t)))
       && !ancestors(t.id).some(a => isAssigned(a) && !vis.has(a)));
     items.sort((a,b) => (!!a.done - !!b.done) || (a.order||0)-(b.order||0));
     wrap.hidden = !items.length;
@@ -984,7 +1186,7 @@ function render(){
 
   document.querySelectorAll('textarea[data-desc]').forEach(autosize);
   restoreFocus(f);
-  focusReq = null;
+  if (focusReq && Date.now() - (focusReq.at || 0) > 3000) focusReq = null;
   setupSortables();
   rendering = false;
 }
@@ -1045,8 +1247,8 @@ function ownerFor(t){
 function newTask(parent, order, owner, assignees){
   const id = B.newId(); sticky.add(id);
   const d = {text:'', parent, order, done:false, doneAt:0, owner: owner || '', assignees: assignees || [], desc:'', due:'', repeat:'', created:Date.now(), createdBy: me || '', updatedAt:Date.now(), updatedBy: me || '', lastAction:'create'};
-  T[id] = d; focusReq = {id, caret:0};
-  write(B.set('tasks', id, d));
+  T[id] = d; focusReq = {id, caret:0, at:Date.now()};
+  trackCreate(id, d); write(B.set('tasks', id, d));
   render();
   return id;
 }
@@ -1064,7 +1266,7 @@ function flushDesc(id){
 }
 function removeTask(id, quiet){
   const ids = [id, ...descendants(id)];
-  if (quiet) { ids.forEach(x => { delete T[x]; delete drafts[x]; write(B.del('tasks', x)); }); render(); return; }
+  if (quiet) { ids.forEach(x => { delete T[x]; delete drafts[x]; trackDelete(x); write(B.del('tasks', x)); }); render(); return; }
   const g = rid(12), now = Date.now(), name = (T[id].text || 'משימה').slice(0, 30);
   ids.forEach(x => {
     flushText(x); flushDesc(x);
@@ -1085,7 +1287,7 @@ $('#root-input').addEventListener('keydown', e => {
   const id = B.newId();
   const top = kids('').filter(t => !t.done);
   const d = {text:v, parent:'', order: top.length ? (top[top.length-1].order||0)+1000 : Date.now(), done:false, doneAt:0, owner: defaultOwner(), assignees:[], desc:'', due:'', repeat:'', created:Date.now(), createdBy: me || '', updatedAt:Date.now(), updatedBy: me || '', lastAction:'create'};
-  T[id] = d; write(B.set('tasks', id, d)); render(); inp.focus();
+  T[id] = d; trackCreate(id, d); write(B.set('tasks', id, d)); render(); inp.focus();
 });
 $('#btn-hide').addEventListener('click', () => { hideDone = !hideDone; GL.set('hideDone', hideDone); render(); });
 $('#btn-share').addEventListener('click', async () => {
@@ -1102,10 +1304,10 @@ $('#views').addEventListener('click', e => {
 document.addEventListener('click', e => {
   const b = e.target.closest('[data-act]');
   if (!b || b.closest('#views') || b.closest('dialog')) {
-    if ((assignFor || dueFor) && !e.target.closest('.assign') && !e.target.closest('dialog') && !e.target.closest('[data-act="people"]') && !e.target.closest('[data-act="due"]')) { assignFor = null; dueFor = null; render(); }
+    if ((assignFor || dueFor || stFor) && !e.target.closest('.assign') && !e.target.closest('dialog') && !e.target.closest('[data-act="people"]') && !e.target.closest('[data-act="due"]') && !e.target.closest('[data-act="status"]')) { flushWait(); assignFor = null; dueFor = null; stFor = null; render(); }
     return;
   }
-  const li = b.closest('li[data-id]'); const id = li && li.dataset.id; const t = id && task(id);
+  const li = b.closest('li[data-id], tr[data-id]'); const id = li && li.dataset.id; const t = id && task(id);
   const act = b.dataset.act;
   if (act === 'open-people') return openPeople();
   if (!t) return;
@@ -1123,13 +1325,23 @@ document.addEventListener('click', e => {
     if (openDesc.has(id)) { const ta = document.getElementById('desc-'+id); if (ta) { ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length); } }
   }
   else if (act === 'due') {
-    const opening = dueFor !== id; dueFor = opening ? id : null; assignFor = null; render();
+    const opening = dueFor !== id; dueFor = opening ? id : null; assignFor = null; stFor = null; render();
     const inp = document.getElementById('due-'+id);
     if (opening && inp) { inp.focus(); if (!t.due) { try { inp.showPicker(); } catch(err){} } }
   }
   else if (act === 'clear-due') { patch(id, {due:'', repeat:''}, 'edit'); dueFor = null; render(); }
   else if (act === 'set-repeat') { const r = b.dataset.r; patch(id, r && !t.due ? {repeat:r, due:todayStr()} : {repeat:r}, 'edit'); render(); }
-  else if (act === 'people') { assignFor = assignFor === id ? null : id; dueFor = null; render(); }
+  else if (act === 'people') { assignFor = assignFor === id ? null : id; dueFor = null; stFor = null; render(); }
+  else if (act === 'status') { flushWait(); stFor = stFor === id ? null : id; dueFor = null; assignFor = null; render(); }
+  else if (act === 'set-status') {
+    const st = b.dataset.s;
+    if (st === 'person') patch(id, {status:'person', via:b.dataset.u}, 'edit');
+    else if (st === 'wait') patch(id, {status:'wait', via:''}, 'edit');
+    else patch(id, {status:'', via:''}, 'edit');
+    if (st !== 'wait') stFor = null;
+    render();
+    if (st === 'wait') { const w = document.getElementById('win-' + id); if (w) w.focus(); }
+  }
   else if (act === 'indent' || act === 'outdent') {
     const el = li.querySelector(':scope > .row .text');
     const caret = el && document.activeElement === el ? getCaret(el) : 'end';
@@ -1179,7 +1391,7 @@ document.addEventListener('focusout', e => {
 document.addEventListener('keydown', e => {
   const el = e.target;
   if (!el.classList || !el.classList.contains('text')) {
-    if (e.key === 'Escape' && (assignFor || dueFor)) { assignFor = null; dueFor = null; render(); }
+    if (e.key === 'Escape' && (assignFor || dueFor || stFor)) { flushWait(); assignFor = null; dueFor = null; stFor = null; render(); }
     return;
   }
   if (e.isComposing) return;
@@ -1222,7 +1434,7 @@ setInterval(() => { if (!document.hidden) render(); }, 30 * 60 * 1000);
 function patch(id, p, action){
   const q = {...p, updatedAt: Date.now(), updatedBy: me || '', lastAction: action};
   T[id] = {...T[id], ...q};
-  write(B.update('tasks', id, q));
+  trackPatch(id, q); write(B.update('tasks', id, q));
 }
 const REPEATS = [['', 'לא'], ['daily', 'כל יום'], ['weekly', 'כל שבוע'], ['monthly', 'כל חודש']];
 function addStep(due, rep){
@@ -1351,7 +1563,7 @@ function jumpTo(id){
   if (vs && !vs.has(id)) { view = 'all'; GL.set('view', view); onlyImp = false; GL.set('onlyImp', false); }
   ancestors(id).forEach(a => collapsed.delete(a)); GL.set('collapsed', [...collapsed]);
   if (hideDone && (T[id].done || ancestors(id).some(a => T[a].done))) { hideDone = false; GL.set('hideDone', false); }
-  focusReq = {id, caret:'end'};
+  focusReq = {id, caret:'end', at:Date.now()};
   render();
   const li = document.querySelector(`#tree li[data-id="${id}"]`);
   if (li) { li.scrollIntoView({block:'center'}); li.classList.add('flash'); setTimeout(() => li.classList.remove('flash'), 1800); }
@@ -1424,7 +1636,7 @@ function indentTask(id, caret){
   const pk = kids(prev.id).filter(k => !k.done); const last = pk[pk.length-1];
   const order = last ? (last.order||0)+1000 : Date.now();
   collapsed.delete(prev.id); GL.set('collapsed', [...collapsed]);
-  focusReq = {id, caret}; patch(id, {parent:prev.id, order}, 'move'); render();
+  focusReq = {id, caret, at:Date.now()}; patch(id, {parent:prev.id, order}, 'move'); render();
 }
 function outdentTask(id, caret){
   const t = task(id); if (!t) return;
@@ -1433,7 +1645,7 @@ function outdentTask(id, caret){
   const p = T[parent]; const gp = p.parent && T[p.parent] ? p.parent : '';
   const gs = kids(gp).filter(k => !k.done); const pi = gs.findIndex(k => k.id === parent); const after = gs[pi+1];
   const order = orderBetween(p.order, after && after.order);
-  focusReq = {id, caret}; patch(id, {parent:gp, order}, 'move'); render();
+  focusReq = {id, caret, at:Date.now()}; patch(id, {parent:gp, order}, 'move'); render();
 }
 // phones send Enter as an input event rather than a key press
 document.addEventListener('beforeinput', e => {
@@ -1488,6 +1700,28 @@ function updateAppIcons(){
   img.src = 'data:image/svg+xml,' + encodeURIComponent(iconSVG(acc));
 }
 updateAppIcons();
+
+
+/* ---------- waiting reason, note editing, kind filter, agenda chips ---------- */
+function flushWait(){
+  for (const k of Object.keys(drafts)) if (k.startsWith('w:')) {
+    const id = k.slice(2), v = drafts[k].trim(); delete drafts[k]; clearTimeout(timers[k]);
+    if (T[id] && (T[id].waitFor || '') !== v) patch(id, {waitFor:v}, 'edit');
+  }
+}
+document.addEventListener('input', e => {
+  const el = e.target; if (!el.classList || !el.classList.contains('win')) return;
+  const k = 'w:' + el.dataset.wfor; drafts[k] = el.value; clearTimeout(timers[k]); timers[k] = setTimeout(flushWait, 700);
+});
+document.addEventListener('keydown', e => {
+  const el = e.target; if (!el.classList || e.key !== 'Enter' || e.isComposing) return;
+  if (el.classList.contains('win')) { e.preventDefault(); flushWait(); stFor = null; render(); }
+  else if (el.dataset && el.dataset.desc && !e.shiftKey) {
+    e.preventDefault(); const id = el.dataset.desc; flushDesc(id); openDesc.delete(id); GL.set('openDesc', [...openDesc]); render();
+  }
+});
+$('#kinds').addEventListener('click', e => { const b = e.target.closest('[data-kind]'); if (!b) return; sticky.clear(); kindF = b.dataset.kind; GL.set('kindF', kindF); render(); });
+$('#urgent').addEventListener('click', e => { const b = e.target.closest('[data-agenda]'); if (!b) return; agendaFor = b.dataset.agenda; GL.set('agendaFor', agendaFor); render(); });
 
 /* ---------- people dialog ---------- */
 function openPeople(){ renderPeople(); const d = $('#people'); if (!d.open) d.showModal(); }
@@ -1550,6 +1784,7 @@ function toast(msg, btnLabel, onBtn){
 render();
 const st = $('#status');
 B.on('tasks', (m, meta) => {
+  m = applyLocalEdits({...m});
   T = {}; TD = {};
   for (const [k, v] of Object.entries(m)) (v.deleted ? TD : T)[k] = v;
   loaded.tasks = true;
